@@ -12,7 +12,9 @@ export default function CategoryDropdown() {
     categories[0]?.slug ?? '',
   );
   const [activeSubCat, setActiveSubCat] = useState<string | null>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
   const handleMouseEnter = () => {
     clearTimeout(closeTimer.current);
