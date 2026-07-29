@@ -19,10 +19,10 @@ export default function BottomHeader() {
   const pathname = usePathname();
 
   return (
-    <div className='sticky top-0 z-40 border-b border-gray-200 bg-white'>
+    <div className='hidden lg:block sticky top-0 z-40 border-b border-gray-200 bg-white'>
       <div className='container mx-auto flex items-center px-4 md:px-6 lg:px-8'>
         {/* Categories — with Dropdown (reduced left padding) */}
-        <div className='hidden lg:block -ml-2'>
+        <div className='hidden lg:block'>
           <CategoryDropdown />
         </div>
 

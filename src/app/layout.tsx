@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Poppins, Inter, Hind_Siliguri } from 'next/font/google';
 import { Header } from '@/components/shared/header';
+import { Footer } from '@/components/shared/footer';
 import './globals.css';
 
 const poppins = Poppins({
@@ -42,7 +43,8 @@ export default function RootLayout({
     >
       <body className='min-h-full flex flex-col font-body text-gray-700 bg-white'>
         <Header />
-        {children}
+        <main className='flex-1 pb-16 lg:pb-0'>{children}</main>
+        <Footer />
       </body>
     </html>
   );

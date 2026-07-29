@@ -37,7 +37,7 @@ export default function CategoryDropdown() {
     >
       {/* Trigger Button */}
       <button
-        className={`flex h-full items-center gap-1.5 border-r border-gray-200 pl-3 pr-4 py-3 font-heading text-sm font-semibold transition-colors whitespace-nowrap ${
+        className={`flex h-full items-center gap-1.5 border-r border-gray-200 pl-0 pr-4 py-3 font-heading text-sm font-semibold transition-colors whitespace-nowrap ${
           isOpen
             ? 'bg-primary text-white'
             : 'text-secondary hover:bg-primary hover:text-white'
@@ -68,10 +68,10 @@ export default function CategoryDropdown() {
                     setActiveCategory(cat.slug);
                     setActiveSubCat(null);
                   }}
-                  className={`flex w-full items-center gap-2 pl-4 pr-2 py-2.5 text-sm font-medium transition-colors text-left border-l-2 ${
+                  className={`flex w-full items-center gap-2 pl-4 pr-2 py-2.5 text-sm font-medium transition-all duration-300 ease-in-out text-left border-l-2 ${
                     activeCategory === cat.slug
-                      ? 'bg-white text-primary border-l-primary'
-                      : 'text-gray-700 hover:bg-white hover:text-primary border-l-transparent'
+                      ? 'bg-white text-primary border-l-primary pl-6'
+                      : 'text-gray-700 border-l-transparent hover:bg-white hover:text-primary hover:pl-6'
                   }`}
                 >
                   <span className='truncate flex-1'>{cat.name}</span>

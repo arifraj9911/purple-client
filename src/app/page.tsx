@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <main className='flex flex-1 flex-col'>
+    <>
       {/* Hero / Welcome Section */}
       <section className='flex flex-1 flex-col items-center justify-center bg-gray-50 px-6 py-20'>
         <h1 className='text-primary mb-4 text-center'>
@@ -41,6 +41,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-    </main>
+    </>
   );
 }
