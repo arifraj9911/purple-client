@@ -1,4 +1,139 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@theme {
+  /* ============================================
+     PRIMARY COLORS (Brand Identity)
+     ============================================ */
+  --color-primary: #e85d3f;
+  --color-primary-dark: #c14a2f;
+  --color-primary-light: #fde8e3;
+
+  /* ============================================
+     SECONDARY & ACCENT COLORS
+     ============================================ */
+  --color-secondary: #2d3436;
+  --color-accent: #00b894;
+  --color-warning: #fdcb6e;
+  --color-danger: #e17055;
+
+  /* ============================================
+     NEUTRAL COLORS
+     ============================================ */
+  --color-white: #ffffff;
+  --color-gray-50: #f8f9fa;
+  --color-gray-100: #f1f3f5;
+  --color-gray-200: #e9ecef;
+  --color-gray-300: #dee2e6;
+  --color-gray-500: #adb5bd;
+  --color-gray-700: #495057;
+  --color-gray-900: #212529;
+
+  /* ============================================
+     SALE / DISCOUNT COLORS
+     ============================================ */
+  --color-sale-badge: #ff4757;
+  --color-sale-text: #ff4757;
+  --color-old-price: #adb5bd;
+
+  /* ============================================
+     STATUS COLORS (Admin Dashboard)
+     ============================================ */
+  --color-status-pending: #ffa502;
+  --color-status-processing: #3498db;
+  --color-status-shipped: #9b59b6;
+  --color-status-delivered: #27ae60;
+  --color-status-cancelled: #e74c3c;
+
+  /* ============================================
+     FONT FAMILIES
+     ============================================ */
+  --font-heading: var(--font-poppins);
+  --font-body: var(--font-inter);
+  --font-bangla: var(--font-hind-siliguri);
+
+  /* ============================================
+     FONT SIZES (from documentation)
+     ============================================ */
+  --text-h1: 2.5rem;
+  --text-h1--line-height: 1.2;
+  --text-h1--font-weight: 700;
+  --text-h2: 2rem;
+  --text-h2--line-height: 1.2;
+  --text-h2--font-weight: 700;
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.2;
+  --text-h3--font-weight: 600;
+  --text-body: 0.875rem;
+  --text-body--line-height: 1.6;
+  --text-body--font-weight: 400;
+  --text-small: 0.75rem;
+  --text-small--line-height: 1.6;
+  --text-small--font-weight: 400;
+
+  /* ============================================
+     BORDER RADIUS
+     ============================================ */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* ============================================
+     CONTAINER
+     ============================================ */
+  --container-max-width: 1280px;
+}
+
+/* ============================================
+   BASE LAYER — Global resets & defaults
+   ============================================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body), sans-serif;
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    color: var(--color-gray-700);
+    background-color: var(--color-white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading), sans-serif;
+    color: var(--color-gray-900);
+  }
+
+  h1 {
+    font-size: var(--text-h1);
+    line-height: var(--text-h1--line-height);
+    font-weight: var(--text-h1--font-weight);
+  }
+  h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    font-weight: var(--text-h2--font-weight);
+  }
+  h3 {
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    font-weight: var(--text-h3--font-weight);
+  }
+
+  /* Bangla text support */
+  [lang='bn'] {
+    font-family: var(--font-bangla), sans-serif;
+  }
+}
 
 :root {
   --background: #ffffff;
