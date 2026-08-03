@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Poppins, Inter, Hind_Siliguri } from 'next/font/google';
 import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
+import { CartDrawer } from '@/components/shared/cart';
+import { CartProvider } from '@/lib/cart-context';
 import './globals.css';
 
 const poppins = Poppins({
@@ -42,9 +44,12 @@ export default function RootLayout({
       className={`${poppins.variable} ${inter.variable} ${hindSiliguri.variable} h-full antialiased`}
     >
       <body className='min-h-full flex flex-col font-body text-gray-700 bg-white'>
-        <Header />
-        <main className='flex-1 pb-16 lg:pb-0'>{children}</main>
-        <Footer />
+        <CartProvider>
+          <Header />
+          <main className='flex-1 pb-16 lg:pb-0'>{children}</main>
+          <Footer />
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

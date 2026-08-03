@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { FiHeart, FiShoppingCart } from 'react-icons/fi';
 import CategoryDropdown from '../CategoryDropdown';
 import UserDropdown from '../UserDropdown';
+import { useCart } from '@/lib/cart-context';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
@@ -17,6 +18,7 @@ const NAV_LINKS = [
 
 export default function BottomHeader() {
   const pathname = usePathname();
+  const { totalItems, openDrawer } = useCart();
 
   return (
     <div className='hidden lg:block sticky top-0 z-40 border-b border-gray-200 bg-white'>
@@ -66,13 +68,16 @@ export default function BottomHeader() {
 
           {/* Cart Icon */}
           <button
+            onClick={openDrawer}
             className='relative rounded-lg p-2 text-gray-700 transition-colors hover:bg-gray-100'
             aria-label='Shopping cart'
           >
             <FiShoppingCart className='h-5 w-5' />
-            <span className='absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white'>
-              5
-            </span>
+            {totalItems > 0 && (
+              <span className='absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white'>
+                {totalItems}
+              </span>
+            )}
           </button>
         </div>
       </div>

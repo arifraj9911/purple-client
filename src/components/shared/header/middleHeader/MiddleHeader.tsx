@@ -2,12 +2,14 @@
 
 import Link from 'next/link';
 import { FiMenu, FiSearch, FiFeather, FiShoppingCart } from 'react-icons/fi';
+import { useCart } from '@/lib/cart-context';
 
 interface MiddleHeaderProps {
   onMenuToggle: () => void;
 }
 
 export default function MiddleHeader({ onMenuToggle }: MiddleHeaderProps) {
+  const { totalItems, openDrawer } = useCart();
   return (
     <div className='border-b border-gray-200 bg-white'>
       <div className='container mx-auto flex items-center gap-4 px-4 md:px-6 lg:px-8 py-3 md:py-4'>
@@ -50,13 +52,16 @@ export default function MiddleHeader({ onMenuToggle }: MiddleHeaderProps) {
         <div className='flex shrink-0 items-center gap-1 md:gap-4'>
           {/* Mobile: Cart only */}
           <button
+            onClick={openDrawer}
             className='relative rounded-lg p-2 text-gray-700 transition-colors hover:bg-gray-100 lg:hidden'
             aria-label='Shopping cart'
           >
             <FiShoppingCart className='h-5 w-5' />
-            <span className='absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white'>
-              5
-            </span>
+            {totalItems > 0 && (
+              <span className='absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white'>
+                {totalItems}
+              </span>
+            )}
           </button>
 
           {/* Desktop: Easy Returns */}

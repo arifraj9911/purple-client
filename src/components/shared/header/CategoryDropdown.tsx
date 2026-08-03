@@ -1,15 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { HiOutlineBars3 } from 'react-icons/hi2';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import { categories, type Category } from '@/data/categories';
 
+/* ── helpers to work with flat category structure ── */
+const getChildren = (parentId: number): Category[] =>
+  categories.filter((c) => c.parentId === parentId);
+
+const topLevelCategories = categories.filter((c) => c.parentId === null);
+
 export default function CategoryDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(
-    categories[0]?.slug ?? '',
+    topLevelCategories[0]?.slug ?? '',
   );
   const [activeSubCat, setActiveSubCat] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
@@ -25,10 +31,8 @@ export default function CategoryDropdown() {
   };
 
   const activeCat =
-    categories.find((c) => c.slug === activeCategory) ?? categories[0];
-  const activeSub =
-    activeCat?.children?.find((c) => c.slug === activeSubCat) ?? null;
-
+    categories.find((c) => c.slug === activeCategory) ?? topLevelCategories[0];
+  const activeCatChildren = activeCat ? getChildren(activeCat.id) : [];
   return (
     <div
       className='relative'
@@ -61,7 +65,7 @@ export default function CategoryDropdown() {
         {/* === LEFT PANEL: Parent Categories === */}
         <div className='w-52 shrink-0 border-r border-gray-100 bg-gray-50 py-2'>
           <ul className='space-y-0.5'>
-            {categories.map((cat) => (
+            {topLevelCategories.map((cat) => (
               <li key={cat.slug}>
                 <button
                   onMouseEnter={() => {
@@ -75,7 +79,7 @@ export default function CategoryDropdown() {
                   }`}
                 >
                   <span className='truncate flex-1'>{cat.name}</span>
-                  {cat.children && cat.children.length > 0 && (
+                  {getChildren(cat.id).length > 0 && (
                     <FiChevronRight className='h-3.5 w-3.5 shrink-0 text-gray-400' />
                   )}
                 </button>
@@ -86,55 +90,52 @@ export default function CategoryDropdown() {
 
         {/* === RIGHT PANEL: Subcategories (vertical list) === */}
         <div className='w-56 border-r border-gray-100 py-2 bg-white'>
-          {activeCat ? (
-            <>
-              {/* Subcategory Items — vertical list */}
-              {activeCat.children && activeCat.children.length > 0 ? (
-                <ul className='space-y-0.5'>
-                  {activeCat.children.map((child) => (
-                    <li
-                      key={child.slug}
-                      onMouseEnter={() => setActiveSubCat(child.slug)}
-                      onMouseLeave={() => setActiveSubCat(null)}
-                      className='relative'
+          {activeCat && activeCatChildren.length > 0 ? (
+            <ul className='space-y-0.5'>
+              {activeCatChildren.map((child) => {
+                const grandChildren = getChildren(child.id);
+                return (
+                  <li
+                    key={child.slug}
+                    onMouseEnter={() => setActiveSubCat(child.slug)}
+                    onMouseLeave={() => setActiveSubCat(null)}
+                    className='relative'
+                  >
+                    <Link
+                      href={`/shop?category=${child.slug}`}
+                      className='flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors'
                     >
-                      <Link
-                        href={`/shop?category=${child.slug}`}
-                        className='flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 transition-colors'
-                      >
-                        <span className='truncate flex-1'>{child.name}</span>
-                        {child.children && child.children.length > 0 && (
-                          <FiChevronRight className='h-3 w-3 shrink-0 text-gray-400' />
-                        )}
-                      </Link>
+                      <span className='truncate flex-1'>{child.name}</span>
+                      {grandChildren.length > 0 && (
+                        <FiChevronRight className='h-3 w-3 shrink-0 text-gray-400' />
+                      )}
+                    </Link>
 
-                      {/* Grand Children (3rd level) — nested sub-panel */}
-                      {child.children &&
-                        child.children.length > 0 &&
-                        activeSubCat === child.slug && (
-                          <div className='absolute left-full top-0 z-50 w-52 rounded-lg border border-gray-200 bg-white py-2 shadow-lg'>
-                            <ul className='space-y-0.5'>
-                              {child.children.map((grandchild) => (
-                                <li key={grandchild.slug}>
-                                  <Link
-                                    href={`/shop?category=${grandchild.slug}`}
-                                    className='block px-4 py-1.5 text-sm text-gray-500 hover:text-primary hover:bg-gray-50 transition-colors'
-                                  >
-                                    {grandchild.name}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className='px-4 py-2 text-sm text-gray-400'>No items</p>
-              )}
-            </>
-          ) : null}
+                    {/* Grand Children (3rd level) — nested sub-panel */}
+                    {grandChildren.length > 0 &&
+                      activeSubCat === child.slug && (
+                        <div className='absolute left-full top-0 z-50 w-52 rounded-lg border border-gray-200 bg-white py-2 shadow-lg'>
+                          <ul className='space-y-0.5'>
+                            {grandChildren.map((grandchild) => (
+                              <li key={grandchild.slug}>
+                                <Link
+                                  href={`/shop?category=${grandchild.slug}`}
+                                  className='block px-4 py-1.5 text-sm text-gray-500 hover:text-primary hover:bg-gray-50 transition-colors'
+                                >
+                                  {grandchild.name}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p className='px-4 py-2 text-sm text-gray-400'>No items</p>
+          )}
         </div>
       </div>
     </div>
