@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#E0F2FE"/>
+  <rect x="100" y="100" width="200" height="180" rx="16" fill="#3B82F6" opacity="0.6"/>
+  <circle cx="140" cy="140" r="20" fill="#1E40AF" opacity="0.5"/>
+  <circle cx="260" cy="140" r="20" fill="#1E40AF" opacity="0.5"/>
+  <rect x="140" y="200" width="120" height="15" rx="4" fill="#1E3A5F" opacity="0.3"/>
+  <text x="200" y="260" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#1E40AF">Art Supplies</text>
+</svg>

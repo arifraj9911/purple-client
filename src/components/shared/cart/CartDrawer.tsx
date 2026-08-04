@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FiX, FiShoppingBag, FiMinus, FiPlus } from 'react-icons/fi';
@@ -15,6 +16,27 @@ export default function CartDrawer() {
     removeItem,
     updateQuantity,
   } = useCart();
+
+  // Track per-item local editing values so the user can clear & retype
+  const [editQtys, setEditQtys] = useState<Record<string | number, string>>({});
+
+  const commitQty = useCallback(
+    (id: string | number, raw: string) => {
+      const num = parseInt(raw, 10);
+      if (isNaN(num) || num <= 0) {
+        updateQuantity(id, 1);
+      } else {
+        updateQuantity(id, num);
+      }
+      // Clear local editing state after commit
+      setEditQtys((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
+    },
+    [updateQuantity],
+  );
 
   return (
     <>
@@ -59,7 +81,7 @@ export default function CartDrawer() {
         </div>
 
         {/* ── Body: Cart Items ── */}
-        <div className='flex-1 overflow-y-auto px-5 py-4'>
+        <div className='flex-1 overflow-y-auto px-4 py-3'>
           {items.length === 0 ? (
             /* Empty State */
             <div className='flex flex-col items-center justify-center pt-16 text-center'>
@@ -83,73 +105,126 @@ export default function CartDrawer() {
           ) : (
             <ul className='divide-y divide-gray-100'>
               {items.map((item) => (
-                <li key={item.id} className='flex gap-4 py-5'>
+                <li key={item.id} className='flex gap-3 py-3'>
                   {/* Product Image */}
-                  <div className='relative h-22 w-22 shrink-0 overflow-hidden rounded-xl bg-gray-100'>
+                  <div className='relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100'>
                     <Image
                       src={item.image}
                       alt={item.name}
                       fill
                       className='object-cover'
-                      sizes='88px'
+                      sizes='64px'
                     />
                   </div>
 
                   {/* Product Info */}
-                  <div className='flex flex-1 flex-col justify-between'>
+                  <div className='flex flex-1 flex-col justify-between min-w-0'>
                     {/* Name + Remove */}
                     <div className='flex items-start justify-between gap-2'>
                       <Link
                         href={`/product/${item.slug}`}
                         onClick={closeDrawer}
-                        className='text-sm font-medium text-gray-900 transition-colors hover:text-primary line-clamp-2 leading-snug'
+                        className='text-xs font-medium text-gray-800 transition-colors hover:text-primary line-clamp-2 leading-snug'
                       >
                         {item.name}
                       </Link>
                       <button
                         onClick={() => removeItem(item.id)}
-                        className='shrink-0 -mr-1 mt-0.5 flex h-6 w-6 items-center justify-center rounded-full text-gray-300 transition-colors hover:bg-red-50 hover:text-red-500'
+                        className='shrink-0 flex h-5 w-5 items-center justify-center rounded-full text-gray-300 transition-colors hover:bg-red-50 hover:text-red-500'
                         aria-label={`Remove ${item.name}`}
                       >
-                        <FiX className='h-4 w-4' />
+                        <FiX className='h-3.5 w-3.5' />
                       </button>
                     </div>
 
-                    {/* Price */}
-                    <p className='text-sm font-bold text-gray-900'>
-                      ৳{item.price.toLocaleString()}
-                    </p>
-
-                    {/* Quantity Controls */}
-                    <div className='flex items-center justify-between'>
-                      <div className='flex items-center gap-1 rounded-lg border border-gray-200 p-0.5'>
-                        <button
-                          onClick={() =>
-                            updateQuantity(item.id, item.quantity - 1)
-                          }
-                          className='flex h-7 w-7 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary'
-                          aria-label='Decrease quantity'
-                        >
-                          <FiMinus className='h-3 w-3' />
-                        </button>
-                        <span className='flex h-7 w-8 items-center justify-center text-center text-sm font-semibold text-gray-900'>
-                          {item.quantity}
+                    {/* Price + Qty Row */}
+                    <div className='flex items-center justify-between mt-1'>
+                      {/* Price area */}
+                      <div className='flex items-baseline gap-2'>
+                        <span className='text-sm font-bold text-gray-900'>
+                          ৳{(item.discountPrice ?? item.price).toLocaleString()}
                         </span>
-                        <button
-                          onClick={() =>
-                            updateQuantity(item.id, item.quantity + 1)
-                          }
-                          className='flex h-7 w-7 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100 hover:text-primary'
-                          aria-label='Increase quantity'
-                        >
-                          <FiPlus className='h-3 w-3' />
-                        </button>
+                        {item.basePrice &&
+                          item.basePrice >
+                            (item.discountPrice ?? item.price) && (
+                            <span className='text-xs text-gray-400 line-through'>
+                              ৳{item.basePrice.toLocaleString()}
+                            </span>
+                          )}
                       </div>
 
-                      {/* Line total */}
-                      <span className='text-sm font-semibold text-primary'>
-                        ৳{(item.price * item.quantity).toLocaleString()}
-                      </span>
+                      {/* Quantity Controls */}
+                      <div className='flex items-center gap-0.5 rounded-md border border-gray-200 p-0.5'>
+                        <button
+                          onClick={() => {
+                            const newQty = item.quantity - 1;
+                            updateQuantity(item.id, newQty);
+                            setEditQtys((prev) => {
+                              const next = { ...prev };
+                              delete next[item.id];
+                              return next;
+                            });
+                          }}
+                          className='flex h-6 w-6 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary'
+                          aria-label='Decrease quantity'
+                        >
+                          <FiMinus className='h-2.5 w-2.5' />
+                        </button>
+                        <input
+                          type='text'
+                          inputMode='numeric'
+                          value={editQtys[item.id] ?? String(item.quantity)}
+                          onChange={(e) => {
+                            const raw = e.target.value;
+                            // Block negative sign
+                            if (raw.includes('-')) return;
+                            // Allow empty for clearing & retyping
+                            if (raw === '') {
+                              setEditQtys((prev) => ({
+                                ...prev,
+                                [item.id]: '',
+                              }));
+                              return;
+                            }
+                            // Only allow digits
+                            if (/^\d+$/.test(raw)) {
+                              setEditQtys((prev) => ({
+                                ...prev,
+                                [item.id]: raw,
+                              }));
+                            }
+                          }}
+                          onBlur={(e) => {
+                            commitQty(item.id, e.target.value);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              commitQty(
+                                item.id,
+                                editQtys[item.id] ?? String(item.quantity),
+                              );
+                              (e.target as HTMLInputElement).blur();
+                            }
+                          }}
+                          className='h-6 w-7 bg-transparent text-center text-xs font-semibold text-gray-900 outline-none'
+                          aria-label='Quantity'
+                        />
+                        <button
+                          onClick={() => {
+                            const newQty = item.quantity + 1;
+                            updateQuantity(item.id, newQty);
+                            setEditQtys((prev) => {
+                              const next = { ...prev };
+                              delete next[item.id];
+                              return next;
+                            });
+                          }}
+                          className='flex h-6 w-6 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary'
+                          aria-label='Increase quantity'
+                        >
+                          <FiPlus className='h-2.5 w-2.5' />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </li>

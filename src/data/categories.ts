@@ -9,6 +9,7 @@ export interface Category {
   name: string;
   slug: string;
   parentId: number | null;
+  children?: Category[];
 }
 
 export const categories: Category[] = [
@@ -88,3 +89,44 @@ export const categories: Category[] = [
   { id: 59, name: 'Studio Easels', slug: 'studio-easels', parentId: 57 },
   { id: 60, name: 'Display Stands', slug: 'display-stands', parentId: 57 },
 ];
+
+/**
+ * Build a nested category tree from the flat array using parentId.
+ * Returns top-level categories with their descendants in `children`.
+ */
+export function buildCategoryTree(flatList: Category[]): Category[] {
+  const map = new Map<number, Category>();
+  const roots: Category[] = [];
+
+  // First pass: shallow clone each category
+  for (const cat of flatList) {
+    map.set(cat.id, { ...cat, children: [] });
+  }
+
+  // Second pass: attach children
+  for (const cat of flatList) {
+    const node = map.get(cat.id)!;
+    if (cat.parentId === null) {
+      roots.push(node);
+    } else {
+      const parent = map.get(cat.parentId);
+      if (parent) {
+        parent.children!.push(node);
+      }
+    }
+  }
+
+  // Clean up empty children arrays
+  const cleanEmpty = (nodes: Category[]) => {
+    for (const node of nodes) {
+      if (node.children && node.children.length === 0) {
+        delete node.children;
+      } else if (node.children) {
+        cleanEmpty(node.children);
+      }
+    }
+  };
+  cleanEmpty(roots);
+
+  return roots;
+}

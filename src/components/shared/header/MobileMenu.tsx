@@ -5,7 +5,11 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { FiX, FiChevronDown, FiFeather } from 'react-icons/fi';
 import { FaFacebook, FaInstagram, FaTiktok } from 'react-icons/fa';
-import { categories, type Category } from '@/data/categories';
+import {
+  categories,
+  buildCategoryTree,
+  type Category,
+} from '@/data/categories';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -116,7 +120,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           {activeTab === 'categories' && (
             <div className='px-4 py-3'>
               <ul className='space-y-0.5'>
-                {categories.map((cat) => (
+                {buildCategoryTree(categories).map((cat) => (
                   <MobileCategoryItem
                     key={cat.slug}
                     category={cat}
@@ -192,28 +196,36 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   );
 }
 
-/** Recursive mobile category item */
+/** Recursive mobile category item — supports N-level nesting */
 function MobileCategoryItem({
   category,
   onClose,
+  depth = 0,
 }: {
   category: Category;
   onClose: () => void;
+  depth?: number;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const hasChildren = category.children && category.children.length > 0;
+  const hasChildren = !!(category.children && category.children.length > 0);
 
   return (
     <li>
       <div
-        className={`flex items-center rounded-lg transition-colors ${expanded ? 'bg-primary-light/40' : ''}`}
+        className={`flex items-center rounded-lg transition-colors ${
+          expanded ? 'bg-primary-light/30' : ''
+        } ${depth > 0 ? 'ml-3' : ''}`}
       >
         <Link
           href={`/shop?category=${category.slug}`}
-          className='flex flex-1 items-center gap-3 px-3 py-3 text-sm font-medium text-gray-700 transition-colors hover:text-primary'
+          className={`flex flex-1 items-center gap-2 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:text-primary ${
+            depth === 0 ? 'px-3' : 'px-2'
+          }`}
           onClick={onClose}
         >
-          {category.name}
+          <span className={`${depth === 0 ? 'font-semibold' : ''}`}>
+            {category.name}
+          </span>
         </Link>
         {hasChildren && (
           <button
@@ -221,24 +233,30 @@ function MobileCategoryItem({
               e.stopPropagation();
               setExpanded(!expanded);
             }}
-            className='rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors mr-1'
+            className='mr-1 rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700'
             aria-label={expanded ? 'Collapse' : 'Expand'}
+            aria-expanded={expanded}
           >
             <FiChevronDown
-              className={`h-4 w-4 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
+              className={`h-4 w-4 transition-transform duration-200 ${
+                expanded ? 'rotate-180' : ''
+              }`}
             />
           </button>
         )}
       </div>
       {hasChildren && (
         <ul
-          className={`ml-4 pl-3 border-l-2 border-primary-light space-y-0.5 overflow-hidden transition-all duration-200 ${expanded ? 'mt-1 max-h-96' : 'max-h-0'}`}
+          className={`ml-2 border-l-2 border-primary-light/60 space-y-0.5 overflow-hidden transition-all duration-300 ease-in-out ${
+            expanded ? 'mt-0.5 max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+          }`}
         >
           {category.children!.map((child) => (
             <MobileCategoryItem
               key={child.slug}
               category={child}
               onClose={onClose}
+              depth={depth + 1}
             />
           ))}
         </ul>

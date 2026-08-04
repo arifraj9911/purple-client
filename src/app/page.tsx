@@ -1,8 +1,13 @@
+import { Banner } from '@/components/home/banner';
+
 export default function Home() {
   return (
     <>
-      {/* Hero / Welcome Section */}
-      <section className='flex flex-1 flex-col items-center justify-center bg-gray-50 px-6 py-20'>
+      {/* ── Banner / Hero Slider ── */}
+      <Banner />
+
+      {/* Font & Color Verification */}
+      <section className='flex flex-col items-center justify-center bg-gray-50 px-6 py-16'>
         <h1 className='text-primary mb-4 text-center'>
           Hello, Welcome to Purple BD
         </h1>

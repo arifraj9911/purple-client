@@ -27,7 +27,7 @@ export default function CategoryDropdown() {
     setIsOpen(true);
   };
   const handleMouseLeave = () => {
-    closeTimer.current = setTimeout(() => setIsOpen(false), 300);
+    closeTimer.current = setTimeout(() => setIsOpen(false), 120);
   };
 
   const activeCat =

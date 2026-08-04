@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#FDE8E3"/>
+  <circle cx="200" cy="180" r="80" fill="#E85D3F" opacity="0.7"/>
+  <rect x="140" y="270" width="120" height="60" rx="8" fill="#C14A2F" opacity="0.5"/>
+  <text x="200" y="140" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#C14A2F">Handicraft</text>
+</svg>
