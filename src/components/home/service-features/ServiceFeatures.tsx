@@ -8,7 +8,7 @@ function DeliveryIcon() {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      className='h-8 w-8'
+      className='h-6 w-6 sm:h-8 sm:w-8'
       fill='none'
       viewBox='0 0 24 24'
       stroke='currentColor'
@@ -27,7 +27,7 @@ function ShippingIcon() {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      className='h-8 w-8'
+      className='h-6 w-6 sm:h-8 sm:w-8'
       fill='none'
       viewBox='0 0 24 24'
       stroke='currentColor'
@@ -46,7 +46,7 @@ function RefundIcon() {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      className='h-8 w-8'
+      className='h-6 w-6 sm:h-8 sm:w-8'
       fill='none'
       viewBox='0 0 24 24'
       stroke='currentColor'
@@ -65,7 +65,7 @@ function HappyCustomersIcon() {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
-      className='h-8 w-8'
+      className='h-6 w-6 sm:h-8 sm:w-8'
       fill='none'
       viewBox='0 0 24 24'
       stroke='currentColor'
@@ -121,25 +121,25 @@ export default function ServiceFeatures() {
   return (
     <section className='bg-white py-8 sm:py-10 lg:py-14'>
       <div className='container mx-auto px-4 md:px-6 lg:px-8'>
-        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
+        <div className='grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
           {features.map((feature) => (
             <Link
               key={feature.id}
               href={feature.link}
-              className='group flex flex-col items-center rounded-xl border border-gray-100 bg-gray-50 p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg sm:p-8'
+              className='group flex flex-col items-center rounded-xl border border-gray-100 bg-gray-50 p-4 md:p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-lg '
             >
               {/* Icon */}
-              <div className='mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-light text-primary transition-colors group-hover:bg-primary group-hover:text-white'>
+              <div className='mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary-light text-primary transition-colors group-hover:bg-primary group-hover:text-white sm:mb-4 sm:h-14 sm:w-14'>
                 {feature.icon}
               </div>
 
               {/* Title */}
-              <h3 className='font-heading text-base font-semibold text-gray-900 sm:text-lg'>
+              <h3 className='font-heading text-sm font-semibold text-gray-900 sm:text-lg'>
                 {feature.title}
               </h3>
 
               {/* Description */}
-              <p className='mt-2 text-sm leading-relaxed text-gray-500'>
+              <p className='mt-1.5 text-xs leading-relaxed text-gray-500 sm:mt-2 sm:text-sm'>
                 {feature.description}
               </p>
             </Link>

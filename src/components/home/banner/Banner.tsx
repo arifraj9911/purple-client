@@ -62,7 +62,7 @@ export default function Banner() {
 
   return (
     <section
-      className='relative w-full h-95 sm:h-110 md:h-125 lg:h-140 overflow-hidden group'
+      className='relative w-full h-95 sm:h-110 md:h-125 lg:h-160 overflow-hidden group'
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       aria-label='Promotional banner slider'

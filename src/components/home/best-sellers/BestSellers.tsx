@@ -37,18 +37,18 @@ export default function BestSellers() {
     <section className='bg-gray-50 py-12 sm:py-16 lg:py-20'>
       <div className='container mx-auto px-4 md:px-6 lg:px-8'>
         {/* ── Header ── */}
-        <div className='mb-8 flex items-end justify-between'>
+        <div className='mb-4 md:mb-8 flex items-end justify-between'>
           <div>
             <span className='inline-block rounded-full bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-600'>
-              🏆 Most Popular
+              Most Popular
             </span>
-            <h2 className='mt-3 font-heading text-2xl font-bold text-gray-900 sm:text-3xl'>
+            <h2 className='mt-1 md:mt-2.5 font-heading text-2xl font-bold text-gray-900 sm:text-3xl'>
               Best Sellers
             </h2>
           </div>
 
           {/* Arrows */}
-          <div className='hidden shrink-0 items-center gap-1 sm:flex'>
+          <div className='flex shrink-0 items-center gap-1'>
             <button
               onClick={scrollPrev}
               disabled={!canScrollPrev}
@@ -100,7 +100,7 @@ export default function BestSellers() {
             {bestSellers.map((product) => (
               <div
                 key={product.id}
-                className='w-[75vw] min-w-0 shrink-0 sm:w-[45vw] md:w-[30vw] lg:w-[23vw] xl:w-[24vw] 2xl:w-[18vw]'
+                className='w-[75vw] min-w-0 shrink-0 sm:w-[45vw] md:w-[calc(25%-18px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] 2xl:w-[calc(25%-18px)]'
               >
                 <ProductCard product={product} />
               </div>

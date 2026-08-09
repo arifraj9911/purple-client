@@ -13,7 +13,7 @@ interface ProductImageProps {
 export default function ProductImage({
   src,
   alt,
-  size = 800,
+  size = 1000,
   className = '',
 }: ProductImageProps) {
   const [thumbnail, setThumbnail] = useState<string | null>(null);
@@ -50,7 +50,7 @@ export default function ProductImage({
   if (isLoading) {
     return (
       <div
-        className={`absolute inset-0 animate-pulse bg-gray-100 ${className}`}
+        className={`aspect-5/4 w-full animate-pulse bg-gray-100 ${className}`}
       />
     );
   }
@@ -58,11 +58,7 @@ export default function ProductImage({
   if (failed) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={src}
-        alt={alt}
-        className={`absolute inset-0 h-full w-full object-cover object-top ${className}`}
-      />
+      <img src={src} alt={alt} className={`block h-auto w-full ${className}`} />
     );
   }
 
@@ -71,7 +67,7 @@ export default function ProductImage({
     <img
       src={thumbnail!}
       alt={alt}
-      className={`absolute inset-0 h-full w-full object-cover ${className}`}
+      className={`block h-auto w-full ${className}`}
     />
   );
 }

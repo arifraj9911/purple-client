@@ -7,12 +7,12 @@ export default function AllProducts() {
     <section className='bg-white py-12 sm:py-16 lg:py-20'>
       <div className='container mx-auto px-4 md:px-6 lg:px-8'>
         {/* ── Header ── */}
-        <div className='mb-8 flex items-end justify-between'>
+        <div className='mb-4 md:mb-8 flex items-end justify-between'>
           <div>
             <span className='inline-block rounded-full bg-primary-light px-3 py-1 text-xs font-semibold text-primary'>
               🛍️ Our Collection
             </span>
-            <h2 className='mt-3 font-heading text-2xl font-bold text-gray-900 sm:text-3xl'>
+            <h2 className='mt-1 md:mt-2.5 font-heading text-2xl font-bold text-gray-900 sm:text-3xl'>
               All Products
             </h2>
           </div>
@@ -39,7 +39,7 @@ export default function AllProducts() {
         </div>
 
         {/* ── Grid ── */}
-        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 md:gap-6 2xl:grid-cols-4'>
+        <div className='grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 md:gap-6 xl:grid-cols-4 2xl:grid-cols-4'>
           {products.slice(0, 8).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
