@@ -21,7 +21,7 @@ export default function BottomHeader() {
   const { totalItems, openDrawer } = useCart();
 
   return (
-    <div className='hidden lg:block sticky top-0 z-40 border-b border-gray-200 bg-white'>
+    <div className='hidden lg:block border-b border-gray-200 bg-white'>
       <div className='container mx-auto flex items-center px-4 md:px-6 lg:px-8'>
         {/* Categories — with Dropdown (reduced left padding) */}
         <div className='hidden lg:block'>

@@ -11,15 +11,19 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header>
+    <>
       <TopHeader />
-      <MiddleHeader onMenuToggle={() => setIsMobileMenuOpen(true)} />
-      <BottomHeader />
+      {/* Sticky wrapper: MiddleHeader + BottomHeader stick together on scroll.
+          Must be a direct child of the scrolling container — NOT wrapped in <header>. */}
+      <div className='sticky top-0 z-40'>
+        <MiddleHeader onMenuToggle={() => setIsMobileMenuOpen(true)} />
+        <BottomHeader />
+      </div>
       <MobileBottomNav />
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       />
-    </header>
+    </>
   );
 }

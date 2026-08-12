@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { FiHeart, FiShoppingCart, FiStar } from 'react-icons/fi';
 import { type Product } from '@/data/products';
 import { useCart } from '@/lib/cart-context';
-import ProductImage from '../ProductImage';
 
 interface ProductCardProps {
   product: Product;
@@ -55,29 +55,37 @@ export default function ProductCard({ product }: ProductCardProps) {
     <div className='group relative flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-gray-200 hover:shadow-lg'>
       {/* ── Image ── */}
       <Link href={`/product/${product.slug}`} className='relative block'>
-        <div className='pb-2'>
-          <div className='relative overflow-hidden rounded-t-lg bg-gray-100'>
-            <ProductImage
-              src={product.images[0]}
-              alt={product.name}
-              // size={800}
-              className='transition-transform duration-500 group-hover:scale-105'
-            />
+        <div className='relative aspect-4/3 overflow-hidden rounded-t-lg bg-gray-100'>
+          {/* Blurred background image — fills gaps when object-contain leaves space */}
+          <Image
+            src={product.images[0]}
+            alt=''
+            width={600}
+            height={600}
+            className='absolute inset-0 h-full w-full scale-110 object-cover blur-xl saturate-150'
+            aria-hidden='true'
+          />
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            width={600}
+            height={600}
+            className='relative z-10 h-full w-full object-contain transition-transform duration-500 group-hover:scale-105'
+          />
 
-            {/* Out of Stock overlay */}
-            {outOfStock && (
-              <div className='absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-white/70'>
-                <span className='rounded-lg bg-gray-800 px-3 py-1 text-xs font-semibold text-white'>
-                  Out of Stock
-                </span>
-              </div>
-            )}
-          </div>
+          {/* Out of Stock overlay */}
+          {outOfStock && (
+            <div className='absolute inset-0 z-20 flex items-center justify-center rounded-lg bg-white/70'>
+              <span className='rounded-lg bg-gray-800 px-3 py-1 text-xs font-semibold text-white'>
+                Out of Stock
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Discount Badge */}
         {discountPercent && discountPercent > 0 && (
-          <span className='absolute left-2.5 top-2.5 z-10 rounded-full bg-sale-badge px-2 py-0.5 text-[11px] font-bold text-white shadow-sm'>
+          <span className='absolute left-2.5 top-2.5 z-20 rounded-full bg-sale-badge px-2 py-0.5 text-[11px] font-bold text-white shadow-sm'>
             -{discountPercent}%
           </span>
         )}
@@ -88,7 +96,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             e.preventDefault();
             // TODO: wishlist logic
           }}
-          className='absolute right-2.5 top-2.5 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-white/80 text-gray-500 shadow-sm backdrop-blur transition-colors hover:bg-white hover:text-red-500 sm:hidden'
+          className='absolute right-2.5 top-2.5 z-20 flex h-6 w-6 items-center justify-center rounded-full bg-white/80 text-gray-500 shadow-sm backdrop-blur transition-colors hover:bg-white hover:text-red-500 sm:hidden'
           aria-label='Add to wishlist'
         >
           <FiHeart className='h-3 w-3' />
@@ -96,7 +104,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </Link>
 
       {/* ── Info (compact) ── */}
-      <div className='flex flex-1 flex-col px-2.5 pb-2.5 sm:px-3 sm:pb-3'>
+      <div className='flex flex-1 flex-col px-2.5 pb-2.5 sm:px-3 sm:pb-3 mt-2'>
         {/* Category */}
         <span className='mb-1 text-[10px] font-medium text-gray-400 sm:text-xs'>
           {product.category}
@@ -105,13 +113,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Name */}
         <Link
           href={`/product/${product.slug}`}
-          className='mb-1 text-[13px] font-semibold leading-snug text-gray-800 transition-colors hover:text-primary line-clamp-2 sm:text-[15px]'
+          className='mb-4 text-[13px] font-medium leading-snug text-gray-800 transition-colors hover:text-primary line-clamp-2 sm:text-[15px]'
         >
           {product.name}
         </Link>
 
         {/* Rating */}
-        <div className='mb-1.5 flex items-center gap-1'>
+        {/* <div className='mb-1.5 flex items-center gap-1'>
           <div className='flex items-center gap-0.5'>
             {[1, 2, 3, 4, 5].map((star) => (
               <FiStar
@@ -127,12 +135,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span className='text-[10px] text-gray-400 sm:text-[11px]'>
             ({product.reviewCount})
           </span>
-        </div>
+        </div> */}
 
         {/* Price + Actions */}
         <div className='mt-auto'>
           <div className='flex items-baseline gap-1.5'>
-            <span className='text-base font-semibold text-gray-900 sm:text-lg'>
+            <span className='text-base font-semibold text-gray-900 sm:text-xl'>
               ৳{currentPrice.toLocaleString()}
             </span>
             {hasDiscount && (

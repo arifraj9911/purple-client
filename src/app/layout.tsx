@@ -4,6 +4,8 @@ import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { CartDrawer } from '@/components/shared/cart';
 import { CartProvider } from '@/lib/cart-context';
+import { ScrollToTop } from '@/components/ui/scroll-to-top';
+import { FloatingContact } from '@/components/ui/floating-contact';
 import './globals.css';
 
 const poppins = Poppins({
@@ -49,6 +51,8 @@ export default function RootLayout({
           <main className='flex-1 pb-16 lg:pb-0'>{children}</main>
           <Footer />
           <CartDrawer />
+          <ScrollToTop />
+          <FloatingContact />
         </CartProvider>
       </body>
     </html>
