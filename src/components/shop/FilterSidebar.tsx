@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import {
   categories,
@@ -41,10 +41,13 @@ export default function FilterSidebar({
     filters.priceRange,
   );
 
-  // Sync pending price when filters reset externally (e.g. Clear All)
-  useEffect(() => {
+  // Sync pending price when filters reset externally (e.g. Clear All).
+  // Adjust state during render instead of in an effect.
+  const [prevPrice, setPrevPrice] = useState(filters.priceRange);
+  if (prevPrice !== filters.priceRange) {
+    setPrevPrice(filters.priceRange);
     setPendingPrice(filters.priceRange);
-  }, [filters.priceRange]);
+  }
 
   const update = (partial: Partial<FilterState>) =>
     onChange({ ...filters, ...partial });
@@ -128,6 +131,10 @@ export default function FilterSidebar({
 
         {/* ── Price Range (at bottom) ── */}
         <FilterSection title='Price Range' defaultOpen>
+          <p className='mb-2 text-xs text-gray-400'>
+            Full range: ৳{priceBounds[0].toLocaleString()} – ৳
+            {priceBounds[1].toLocaleString()}
+          </p>
           <PriceRangeSlider
             min={priceBounds[0]}
             max={priceBounds[1]}
@@ -165,15 +172,23 @@ function FilterSection({
   return (
     <div className='border-t border-gray-100 pt-4'>
       <button
+        type='button'
+        aria-expanded={open}
         onClick={() => setOpen(!open)}
-        className='flex w-full items-center justify-between text-sm font-semibold text-gray-700 font-heading mb-3'
+        className='mb-3 flex w-full items-center justify-between text-sm font-semibold text-gray-700 font-heading'
       >
         {title}
         <FiChevronDown
-          className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 shrink-0 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
         />
       </button>
-      {open && children}
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+          open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+        }`}
+      >
+        <div className='min-h-0 overflow-hidden'>{children}</div>
+      </div>
     </div>
   );
 }
@@ -235,7 +250,11 @@ function CategoryTree({
                   onClick={() =>
                     setExpanded((prev) => {
                       const next = new Set(prev);
-                      next.has(cat.id) ? next.delete(cat.id) : next.add(cat.id);
+                      if (next.has(cat.id)) {
+                        next.delete(cat.id);
+                      } else {
+                        next.add(cat.id);
+                      }
                       return next;
                     })
                   }

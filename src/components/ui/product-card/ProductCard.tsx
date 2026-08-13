@@ -8,9 +8,13 @@ import { useCart } from '@/lib/cart-context';
 
 interface ProductCardProps {
   product: Product;
+  priority?: boolean;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  priority = false,
+}: ProductCardProps) {
   const { addItem, openDrawer } = useCart();
 
   const outOfStock = product.stock === 0;
@@ -70,6 +74,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             alt={product.name}
             width={600}
             height={600}
+            priority={priority}
             className='relative z-10 h-full w-full object-contain transition-transform duration-500 group-hover:scale-105'
           />
 
@@ -181,7 +186,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <button
               onClick={handleBuyNow}
               disabled={outOfStock}
-              className={`flex h-8 flex-1 items-center justify-center rounded-lg text-[11px] font-semibold transition-all duration-200 sm:h-10 sm:text-xs ${
+              className={`flex h-8 flex-1 items-center justify-center rounded-lg  font-semibold transition-all duration-200 sm:h-10 text-xs sm:text-sm ${
                 outOfStock
                   ? 'cursor-not-allowed bg-gray-100 text-gray-300'
                   : 'bg-primary text-white hover:bg-primary-dark'

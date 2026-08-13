@@ -8,7 +8,11 @@ import { ProductCard } from '@/components/ui/product-card';
 import FilterSidebar, {
   type FilterState,
 } from '@/components/shop/FilterSidebar';
-import { products } from '@/data/products';
+import {
+  products,
+  getProductPriceRange,
+  getCurrentPrice,
+} from '@/data/products';
 
 const ITEMS_PER_PAGE = 9;
 const SORT_OPTIONS = [
@@ -35,11 +39,11 @@ export default function ShopPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
 
-  // Price bounds from data
-  const priceBounds: [number, number] = useMemo(() => {
-    const prices = products.map((p) => p.discountPrice ?? p.basePrice);
-    return [Math.min(...prices), Math.max(...prices)];
-  }, []);
+  // Price bounds from actual product data (min & max current price)
+  const priceBounds: [number, number] = useMemo(
+    () => getProductPriceRange(),
+    [],
+  );
 
   const [filters, setFilters] = useState<FilterState>({
     categoryIds: [],
@@ -59,8 +63,7 @@ export default function ShopPage() {
     }
 
     // Price range
-    const currentPrice = (p: (typeof products)[0]) =>
-      p.discountPrice ?? p.basePrice;
+    const currentPrice = (p: (typeof products)[0]) => getCurrentPrice(p);
     result = result.filter(
       (p) =>
         currentPrice(p) >= filters.priceRange[0] &&
@@ -266,14 +269,22 @@ export default function ShopPage() {
               </div>
             ) : viewMode === 'grid' ? (
               <div className='grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 2xl:grid-cols-4 transition-all duration-300'>
-                {paginatedProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                {paginatedProducts.map((product, index) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    priority={index === 0}
+                  />
                 ))}
               </div>
             ) : (
               <div className='space-y-4 transition-all duration-300'>
-                {paginatedProducts.map((product) => (
-                  <ProductListRow key={product.id} product={product} />
+                {paginatedProducts.map((product, index) => (
+                  <ProductListRow
+                    key={product.id}
+                    product={product}
+                    priority={index === 0}
+                  />
                 ))}
               </div>
             )}
@@ -302,7 +313,13 @@ import { FiHeart, FiShoppingCart, FiStar } from 'react-icons/fi';
 import { type Product } from '@/data/products';
 import { useCart } from '@/lib/cart-context';
 
-function ProductListRow({ product }: { product: Product }) {
+function ProductListRow({
+  product,
+  priority = false,
+}: {
+  product: Product;
+  priority?: boolean;
+}) {
   const { addItem, openDrawer } = useCart();
   const outOfStock = product.stock === 0;
   const hasDiscount =
@@ -349,6 +366,7 @@ function ProductListRow({ product }: { product: Product }) {
           alt={product.name}
           fill
           sizes='(max-width: 640px) 96px, 128px'
+          priority={priority}
           className='relative z-10 object-contain'
         />
         {discountPercent && discountPercent > 0 && (

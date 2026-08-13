@@ -43,6 +43,7 @@ export default function RootLayout({
   return (
     <html
       lang='en'
+      data-scroll-behavior='smooth'
       className={`${poppins.variable} ${inter.variable} ${hindSiliguri.variable} h-full antialiased`}
     >
       <body className='min-h-full flex flex-col font-body text-gray-700 bg-white'>

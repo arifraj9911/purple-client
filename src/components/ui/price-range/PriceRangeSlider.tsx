@@ -17,14 +17,8 @@ export default function PriceRangeSlider({
   value,
   onChange,
 }: PriceRangeProps) {
-  const [localMin, localMinPercent] = [
-    value[0],
-    ((value[0] - min) / (max - min)) * 100,
-  ];
-  const [localMax, localMaxPercent] = [
-    value[1],
-    ((value[1] - min) / (max - min)) * 100,
-  ];
+  const localMinPercent = ((value[0] - min) / (max - min)) * 100;
+  const localMaxPercent = ((value[1] - min) / (max - min)) * 100;
 
   const trackRef = useRef<HTMLDivElement>(null);
   const dragging = useRef<'min' | 'max' | null>(null);
@@ -39,15 +33,20 @@ export default function PriceRangeSlider({
       );
       return Math.round((pct / 100) * (max - min) + min);
     },
-    [min, max, step],
+    [min, max],
   );
 
-  const handlePointerDown =
-    (handle: 'min' | 'max') => (e: React.PointerEvent) => {
-      e.preventDefault();
-      dragging.current = handle;
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    };
+  const handleMinPointerDown = (e: React.PointerEvent) => {
+    e.preventDefault();
+    dragging.current = 'min';
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handleMaxPointerDown = (e: React.PointerEvent) => {
+    e.preventDefault();
+    dragging.current = 'max';
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
 
   const handlePointerMove = (e: React.PointerEvent) => {
     if (!dragging.current) return;
@@ -70,32 +69,34 @@ export default function PriceRangeSlider({
   const gap = localMaxPercent - localMinPercent;
 
   return (
-    <div
-      ref={trackRef}
-      className='relative h-1.5 w-full rounded-full bg-gray-200 select-none touch-none'
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
-    >
-      {/* Active range */}
+    <div className='p-2.5 select-none touch-none'>
       <div
-        className='absolute h-full rounded-full bg-primary transition-all duration-150'
-        style={{ left: `${localMinPercent}%`, width: `${gap}%` }}
-      />
+        ref={trackRef}
+        className='relative h-2 w-full rounded-full bg-gray-200'
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+      >
+        {/* Active range */}
+        <div
+          className='absolute h-full rounded-full bg-primary transition-all duration-150'
+          style={{ left: `${localMinPercent}%`, width: `${gap}%` }}
+        />
 
-      {/* Min thumb */}
-      <div
-        className='absolute top-1/2 -translate-y-1/2 h-4 w-4 cursor-pointer rounded-full border-2 border-primary bg-white shadow-md transition-transform hover:scale-110'
-        style={{ left: `calc(${localMinPercent}% - 8px)` }}
-        onPointerDown={handlePointerDown('min')}
-      />
+        {/* Min thumb */}
+        <div
+          className='absolute top-1/2 -translate-y-1/2 h-4 w-4 cursor-pointer rounded-full border-2 border-primary bg-white shadow-md transition-transform hover:scale-110'
+          style={{ left: `calc(${localMinPercent}% - 8px)` }}
+          onPointerDown={handleMinPointerDown}
+        />
 
-      {/* Max thumb */}
-      <div
-        className='absolute top-1/2 -translate-y-1/2 h-4 w-4 cursor-pointer rounded-full border-2 border-primary bg-white shadow-md transition-transform hover:scale-110'
-        style={{ left: `calc(${localMaxPercent}% - 8px)` }}
-        onPointerDown={handlePointerDown('max')}
-      />
+        {/* Max thumb */}
+        <div
+          className='absolute top-1/2 -translate-y-1/2 h-4 w-4 cursor-pointer rounded-full border-2 border-primary bg-white shadow-md transition-transform hover:scale-110'
+          style={{ left: `calc(${localMaxPercent}% - 8px)` }}
+          onPointerDown={handleMaxPointerDown}
+        />
+      </div>
     </div>
   );
 }
