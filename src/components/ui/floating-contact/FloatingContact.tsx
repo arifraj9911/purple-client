@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { FiMessageCircle, FiPhone, FiX } from 'react-icons/fi';
 import { FaWhatsapp, FaFacebookMessenger } from 'react-icons/fa';
+import { useCart } from '@/lib/cart-context';
 
 interface ContactOption {
   icon: React.ComponentType<{ className?: string }>;
@@ -34,9 +35,14 @@ const CONTACT_OPTIONS: ContactOption[] = [
 
 export default function FloatingContact() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isDrawerOpen } = useCart();
 
   return (
-    <div className='fixed right-5 bottom-26.5 z-50 flex flex-col items-center gap-2 lg:right-5 lg:bottom-17'>
+    <div
+      className={`fixed right-5 bottom-26.5 z-50 flex flex-col items-center gap-2 transition-opacity duration-300 lg:right-5 lg:bottom-17 ${
+        isDrawerOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
+      }`}
+    >
       {/* Contact option buttons — pop into place above the button */}
       {CONTACT_OPTIONS.map((option) => (
         <a

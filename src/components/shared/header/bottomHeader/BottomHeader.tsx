@@ -6,6 +6,7 @@ import { FiHeart, FiShoppingCart } from 'react-icons/fi';
 import CategoryDropdown from '../CategoryDropdown';
 import UserDropdown from '../UserDropdown';
 import { useCart } from '@/lib/cart-context';
+import { useWishlist } from '@/lib/wishlist-context';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
@@ -19,6 +20,7 @@ const NAV_LINKS = [
 export default function BottomHeader() {
   const pathname = usePathname();
   const { totalItems, openDrawer } = useCart();
+  const { totalItems: wishlistCount } = useWishlist();
 
   return (
     <div className='hidden lg:block border-b border-gray-200 bg-white'>
@@ -56,15 +58,18 @@ export default function BottomHeader() {
           </div>
 
           {/* Wishlist Icon */}
-          <button
+          <Link
+            href='/wishlist'
             className='relative rounded-lg p-2 text-gray-700 transition-colors hover:bg-gray-100'
             aria-label='Wishlist'
           >
             <FiHeart className='h-5 w-5' />
-            <span className='absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-sale-badge px-1 text-[10px] font-bold text-white'>
-              3
-            </span>
-          </button>
+            {wishlistCount > 0 && (
+              <span className='absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-sale-badge px-1 text-[10px] font-bold text-white'>
+                {wishlistCount}
+              </span>
+            )}
+          </Link>
 
           {/* Cart Icon */}
           <button

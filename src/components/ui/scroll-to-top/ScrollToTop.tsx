@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { FiChevronUp } from 'react-icons/fi';
+import { useCart } from '@/lib/cart-context';
 
 export default function ScrollToTop() {
   const [visible, setVisible] = useState(false);
+  const { isDrawerOpen } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,7 +29,7 @@ export default function ScrollToTop() {
       onClick={scrollToTop}
       aria-label='Scroll to top'
       className={`fixed bottom-16 right-5 z-[999] flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-all duration-300 hover:bg-primary-dark hover:shadow-xl  lg:bottom-6 ${
-        visible
+        visible && !isDrawerOpen
           ? 'translate-y-0 opacity-100'
           : 'pointer-events-none translate-y-4 opacity-0'
       }`}

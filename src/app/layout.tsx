@@ -4,6 +4,7 @@ import { Header } from '@/components/shared/header';
 import { Footer } from '@/components/shared/footer';
 import { CartDrawer } from '@/components/shared/cart';
 import { CartProvider } from '@/lib/cart-context';
+import { WishlistProvider } from '@/lib/wishlist-context';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { FloatingContact } from '@/components/ui/floating-contact';
 import './globals.css';
@@ -48,12 +49,14 @@ export default function RootLayout({
     >
       <body className='min-h-full flex flex-col font-body text-gray-700 bg-white'>
         <CartProvider>
-          <Header />
-          <main className='flex-1 pb-16 lg:pb-0'>{children}</main>
-          <Footer />
-          <CartDrawer />
-          <ScrollToTop />
-          <FloatingContact />
+          <WishlistProvider>
+            <Header />
+            <main className='flex-1 pb-16 lg:pb-0'>{children}</main>
+            <Footer />
+            <CartDrawer />
+            <ScrollToTop />
+            <FloatingContact />
+          </WishlistProvider>
         </CartProvider>
       </body>
     </html>

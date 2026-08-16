@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiX, FiShoppingBag, FiMinus, FiPlus } from 'react-icons/fi';
+import { FiX, FiShoppingBag, FiMinus, FiPlus, FiTrash2 } from 'react-icons/fi';
 import { useCart } from '@/lib/cart-context';
 
 export default function CartDrawer() {
@@ -105,60 +105,62 @@ export default function CartDrawer() {
           ) : (
             <ul className='divide-y divide-gray-100'>
               {items.map((item) => (
-                <li key={item.id} className='flex gap-3 py-3'>
+                <li key={item.id} className='flex gap-3 py-4'>
                   {/* Product Image */}
-                  <div className='relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100'>
+                  <Link
+                    href={`/product/${item.slug}`}
+                    onClick={closeDrawer}
+                    className='relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-100'
+                  >
                     <Image
                       src={item.image}
                       alt={item.name}
                       fill
                       className='object-cover'
-                      sizes='64px'
+                      sizes='80px'
                     />
-                  </div>
+                  </Link>
 
                   {/* Product Info */}
-                  <div className='flex flex-1 flex-col justify-between min-w-0'>
+                  <div className='flex min-w-0 flex-1 flex-col'>
                     {/* Name + Remove */}
                     <div className='flex items-start justify-between gap-2'>
                       <Link
                         href={`/product/${item.slug}`}
                         onClick={closeDrawer}
-                        className='text-xs font-medium text-gray-800 transition-colors hover:text-primary line-clamp-2 leading-snug'
+                        className='line-clamp-2 text-xs font-medium leading-snug text-gray-800 transition-colors hover:text-primary'
                       >
                         {item.name}
                       </Link>
                       <button
                         onClick={() => removeItem(item.id)}
-                        className='shrink-0 flex h-5 w-5 items-center justify-center rounded-full text-gray-300 transition-colors hover:bg-red-50 hover:text-red-500'
+                        className='flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-gray-300 transition-colors hover:bg-red-50 hover:text-red-500'
                         aria-label={`Remove ${item.name}`}
                       >
-                        <FiX className='h-3.5 w-3.5' />
+                        <FiTrash2 className='h-3.5 w-3.5' />
                       </button>
                     </div>
 
-                    {/* Price + Qty Row */}
-                    <div className='flex items-center justify-between mt-1'>
-                      {/* Price area */}
-                      <div className='flex items-baseline gap-2'>
-                        <span className='text-sm font-bold text-gray-900'>
-                          ৳{(item.discountPrice ?? item.price).toLocaleString()}
-                        </span>
-                        {item.basePrice &&
-                          item.basePrice >
-                            (item.discountPrice ?? item.price) && (
-                            <span className='text-xs text-gray-400 line-through'>
-                              ৳{item.basePrice.toLocaleString()}
-                            </span>
-                          )}
-                      </div>
+                    {/* Unit price */}
+                    <div className='mt-1 flex items-baseline gap-2'>
+                      <span className='text-base font-bold text-primary'>
+                        ৳{(item.discountPrice ?? item.price).toLocaleString()}
+                      </span>
+                      {item.basePrice &&
+                        item.basePrice > (item.discountPrice ?? item.price) && (
+                          <span className='text-xs text-gray-400 line-through'>
+                            ৳{item.basePrice.toLocaleString()}
+                          </span>
+                        )}
+                    </div>
 
+                    {/* Quantity + Line total */}
+                    <div className='mt-2 flex items-center justify-between gap-2'>
                       {/* Quantity Controls */}
                       <div className='flex items-center gap-0.5 rounded-md border border-gray-200 p-0.5'>
                         <button
                           onClick={() => {
-                            const newQty = item.quantity - 1;
-                            updateQuantity(item.id, newQty);
+                            updateQuantity(item.id, item.quantity - 1);
                             setEditQtys((prev) => {
                               const next = { ...prev };
                               delete next[item.id];
@@ -176,9 +178,7 @@ export default function CartDrawer() {
                           value={editQtys[item.id] ?? String(item.quantity)}
                           onChange={(e) => {
                             const raw = e.target.value;
-                            // Block negative sign
                             if (raw.includes('-')) return;
-                            // Allow empty for clearing & retyping
                             if (raw === '') {
                               setEditQtys((prev) => ({
                                 ...prev,
@@ -186,7 +186,6 @@ export default function CartDrawer() {
                               }));
                               return;
                             }
-                            // Only allow digits
                             if (/^\d+$/.test(raw)) {
                               setEditQtys((prev) => ({
                                 ...prev,
@@ -211,8 +210,7 @@ export default function CartDrawer() {
                         />
                         <button
                           onClick={() => {
-                            const newQty = item.quantity + 1;
-                            updateQuantity(item.id, newQty);
+                            updateQuantity(item.id, item.quantity + 1);
                             setEditQtys((prev) => {
                               const next = { ...prev };
                               delete next[item.id];
@@ -225,6 +223,14 @@ export default function CartDrawer() {
                           <FiPlus className='h-2.5 w-2.5' />
                         </button>
                       </div>
+
+                      {/* Line total */}
+                      <span className='text-base font-semibold text-gray-900'>
+                        ৳
+                        {(
+                          (item.discountPrice ?? item.price) * item.quantity
+                        ).toLocaleString()}
+                      </span>
                     </div>
                   </div>
                 </li>
@@ -233,32 +239,43 @@ export default function CartDrawer() {
           )}
         </div>
 
-        {/* ── Footer: Subtotal + Buttons ── */}
+        {/* ── Footer: Summary + Buttons ── */}
         {items.length > 0 && (
-          <div className='border-t border-gray-200 px-5 py-4'>
-            {/* Subtotal */}
-            <div className='mb-4 flex items-center justify-between'>
-              <span className='text-base font-medium text-gray-900'>
-                Subtotal
-              </span>
-              <span className='text-lg font-bold text-primary'>
-                ৳{subtotal.toLocaleString()}
-              </span>
+          <div className='border-t border-gray-200 bg-gray-50 px-5 py-4'>
+            <div className='space-y-2 text-sm'>
+              <div className='flex items-center justify-between'>
+                <span className='text-gray-500'>Subtotal</span>
+                <span className='font-medium text-gray-900'>
+                  ৳{subtotal.toLocaleString()}
+                </span>
+              </div>
+              <div className='flex items-center justify-between'>
+                <span className='text-gray-500'>Shipping</span>
+                <span className='font-medium text-gray-900'>
+                  Calculated at checkout
+                </span>
+              </div>
+              <div className='flex items-center justify-between border-t border-gray-200 pt-2 text-base'>
+                <span className='font-semibold text-gray-900'>Total</span>
+                <span className='font-bold text-primary'>
+                  ৳{subtotal.toLocaleString()}
+                </span>
+              </div>
             </div>
 
             {/* Action Buttons */}
-            <div className='flex flex-col gap-2 lg:flex-row lg:items-center'>
+            <div className='mt-4 flex flex-col gap-2 lg:flex-row lg:items-center'>
               <Link
                 href='/checkout'
                 onClick={closeDrawer}
                 className='flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark lg:flex-1'
               >
-                Proceed to Checkout
+                Checkout
               </Link>
               <Link
                 href='/cart'
                 onClick={closeDrawer}
-                className='flex w-full items-center justify-center rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-primary hover:text-primary lg:flex-1'
+                className='flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-primary hover:text-primary lg:flex-1'
               >
                 View Cart
               </Link>

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { FiHeart, FiShoppingCart, FiStar } from 'react-icons/fi';
 import { type Product } from '@/data/products';
 import { useCart } from '@/lib/cart-context';
+import { useWishlist } from '@/lib/wishlist-context';
 
 interface ProductCardProps {
   product: Product;
@@ -16,6 +17,8 @@ export default function ProductCard({
   priority = false,
 }: ProductCardProps) {
   const { addItem, openDrawer } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const inWishlist = isInWishlist(product.id);
 
   const outOfStock = product.stock === 0;
   const hasDiscount =
@@ -99,12 +102,14 @@ export default function ProductCard({
         <button
           onClick={(e) => {
             e.preventDefault();
-            // TODO: wishlist logic
+            toggleWishlist(product.id);
           }}
-          className='absolute right-2.5 top-2.5 z-20 flex h-6 w-6 items-center justify-center rounded-full bg-white/80 text-gray-500 shadow-sm backdrop-blur transition-colors hover:bg-white hover:text-red-500 sm:hidden'
-          aria-label='Add to wishlist'
+          className={`absolute right-2.5 top-2.5 z-20 flex h-6 w-6 items-center justify-center rounded-full bg-white/80 shadow-sm backdrop-blur transition-colors hover:bg-white hover:text-red-500 sm:hidden ${
+            inWishlist ? 'text-red-500' : 'text-gray-500'
+          }`}
+          aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
         >
-          <FiHeart className='h-3 w-3' />
+          <FiHeart className={`h-3 w-3 ${inWishlist ? 'fill-red-500' : ''}`} />
         </button>
       </Link>
 
@@ -160,12 +165,20 @@ export default function ProductCard({
             <button
               onClick={(e) => {
                 e.preventDefault();
-                // TODO: wishlist logic
+                toggleWishlist(product.id);
               }}
-              className='hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-gray-200 text-gray-400 transition-all duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-500 sm:flex sm:h-10 sm:w-10'
-              aria-label='Add to wishlist'
+              className={`hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg border transition-all duration-200 sm:flex sm:h-10 sm:w-10 ${
+                inWishlist
+                  ? 'border-red-200 bg-red-50 text-red-500'
+                  : 'border-gray-200 text-gray-400 hover:border-red-200 hover:bg-red-50 hover:text-red-500'
+              }`}
+              aria-label={
+                inWishlist ? 'Remove from wishlist' : 'Add to wishlist'
+              }
             >
-              <FiHeart className='h-3 w-3 sm:h-4 sm:w-4' />
+              <FiHeart
+                className={`h-3 w-3 sm:h-4 sm:w-4 ${inWishlist ? 'fill-red-500' : ''}`}
+              />
             </button>
 
             {/* Add to Cart icon */}

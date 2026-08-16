@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fi';
 import { type Product } from '@/data/products';
 import { useCart } from '@/lib/cart-context';
+import { useWishlist } from '@/lib/wishlist-context';
 
 interface ProductPurchaseProps {
   product: Product;
@@ -21,10 +22,11 @@ interface ProductPurchaseProps {
 
 export default function ProductPurchase({ product }: ProductPurchaseProps) {
   const { addItem, openDrawer } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
 
   const [quantity, setQuantity] = useState(1);
-  const [wishlisted, setWishlisted] = useState(false);
   const [compared, setCompared] = useState(false);
+  const wishlisted = isInWishlist(product.id);
 
   const outOfStock = product.stock === 0;
   const lowStock = !outOfStock && product.stock <= 10;
@@ -204,7 +206,7 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
 
         <button
           type='button'
-          onClick={() => setWishlisted((w) => !w)}
+          onClick={() => toggleWishlist(product.id)}
           aria-pressed={wishlisted}
           aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           title={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}

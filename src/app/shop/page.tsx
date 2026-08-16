@@ -312,6 +312,7 @@ import Image from 'next/image';
 import { FiHeart, FiShoppingCart, FiStar } from 'react-icons/fi';
 import { type Product } from '@/data/products';
 import { useCart } from '@/lib/cart-context';
+import { useWishlist } from '@/lib/wishlist-context';
 
 function ProductListRow({
   product,
@@ -321,6 +322,8 @@ function ProductListRow({
   priority?: boolean;
 }) {
   const { addItem, openDrawer } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const inWishlist = isInWishlist(product.id);
   const outOfStock = product.stock === 0;
   const hasDiscount =
     product.discountPrice !== null && product.discountPrice < product.basePrice;
@@ -420,11 +423,19 @@ function ProductListRow({
           <div className='flex items-center gap-1.5'>
             <button
               onClick={(e) => {
-                e.preventDefault(); /* wishlist */
+                e.preventDefault();
+                toggleWishlist(product.id);
               }}
-              className='rounded-lg p-1.5 text-gray-400 transition-colors hover:text-red-500'
+              aria-label={
+                inWishlist ? 'Remove from wishlist' : 'Add to wishlist'
+              }
+              className={`rounded-lg p-1.5 transition-colors hover:text-red-500 ${
+                inWishlist ? 'text-red-500' : 'text-gray-400'
+              }`}
             >
-              <FiHeart className='h-4 w-4' />
+              <FiHeart
+                className={`h-4 w-4 ${inWishlist ? 'fill-red-500' : ''}`}
+              />
             </button>
             <button
               onClick={handleAddToCart}
