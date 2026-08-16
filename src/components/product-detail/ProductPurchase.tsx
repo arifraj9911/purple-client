@@ -15,6 +15,7 @@ import {
 import { type Product } from '@/data/products';
 import { useCart } from '@/lib/cart-context';
 import { useWishlist } from '@/lib/wishlist-context';
+import { useCompare } from '@/lib/compare-context';
 
 interface ProductPurchaseProps {
   product: Product;
@@ -23,9 +24,11 @@ interface ProductPurchaseProps {
 export default function ProductPurchase({ product }: ProductPurchaseProps) {
   const { addItem, openDrawer } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { isInCompare, addToCompare, removeFromCompare } = useCompare();
 
   const [quantity, setQuantity] = useState(1);
-  const [compared, setCompared] = useState(false);
+  const [compareNotice, setCompareNotice] = useState('');
+  const compared = isInCompare(product.id);
   const wishlisted = isInWishlist(product.id);
 
   const outOfStock = product.stock === 0;
@@ -68,6 +71,17 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
 
   const changeQuantity = (delta: number) => {
     setQuantity((q) => Math.min(product.stock || 1, Math.max(1, q + delta)));
+  };
+
+  const handleToggleCompare = () => {
+    if (compared) {
+      removeFromCompare(product.id);
+      return;
+    }
+    if (!addToCompare(product.id)) {
+      setCompareNotice('You can compare up to 3 products at a time');
+      setTimeout(() => setCompareNotice(''), 3000);
+    }
   };
 
   const stars = [1, 2, 3, 4, 5];
@@ -221,7 +235,7 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
 
         <button
           type='button'
-          onClick={() => setCompared((c) => !c)}
+          onClick={handleToggleCompare}
           aria-pressed={compared}
           aria-label={compared ? 'Remove from compare' : 'Add to compare'}
           title={compared ? 'Remove from compare' : 'Add to compare'}
@@ -234,6 +248,12 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
           <FiColumns className='h-5 w-5' />
         </button>
       </div>
+
+      {compareNotice && (
+        <p className='mt-2 text-xs font-medium text-sale-badge'>
+          {compareNotice}
+        </p>
+      )}
 
       {/* ── Add to Cart + Buy Now (side-by-side) ── */}
       <div className='mt-3 flex gap-3 sm:gap-3'>

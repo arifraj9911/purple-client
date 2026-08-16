@@ -2,17 +2,23 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiHome, FiHeart, FiUser, FiCopy } from 'react-icons/fi';
+import { FiHome, FiHeart, FiUser, FiColumns } from 'react-icons/fi';
+import { useAuth } from '@/lib/auth-context';
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
+  const { user } = useAuth();
 
   const navItems = [
     { label: 'Home', href: '/', icon: FiHome },
     { label: 'Wishlist', href: '/wishlist', icon: FiHeart },
-    { label: 'Compare', href: '/compare', icon: FiCopy },
-    { label: 'My Account', href: '/login', icon: FiUser },
-  ] as const;
+    { label: 'Compare', href: '/compare', icon: FiColumns },
+    {
+      label: user ? 'Account' : 'Login',
+      href: user ? '/user-dashboard' : '/login',
+      icon: FiUser,
+    },
+  ];
 
   return (
     <div className='fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white lg:hidden safe-area-bottom'>

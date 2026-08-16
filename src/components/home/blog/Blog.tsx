@@ -39,7 +39,7 @@ export default function Blog() {
 
         {/* ── Grid ── */}
         <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-          {blogPosts.map((post) => (
+          {blogPosts.slice(0, 3).map((post) => (
             <article
               key={post.id}
               className='group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md'

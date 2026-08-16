@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiHeart, FiShoppingCart } from 'react-icons/fi';
+import { FiColumns, FiHeart, FiShoppingCart } from 'react-icons/fi';
 import CategoryDropdown from '../CategoryDropdown';
 import UserDropdown from '../UserDropdown';
 import { useCart } from '@/lib/cart-context';
 import { useWishlist } from '@/lib/wishlist-context';
+import { useCompare } from '@/lib/compare-context';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
@@ -21,6 +22,7 @@ export default function BottomHeader() {
   const pathname = usePathname();
   const { totalItems, openDrawer } = useCart();
   const { totalItems: wishlistCount } = useWishlist();
+  const { totalItems: compareCount } = useCompare();
 
   return (
     <div className='hidden lg:block border-b border-gray-200 bg-white'>
@@ -67,6 +69,20 @@ export default function BottomHeader() {
             {wishlistCount > 0 && (
               <span className='absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-sale-badge px-1 text-[10px] font-bold text-white'>
                 {wishlistCount}
+              </span>
+            )}
+          </Link>
+
+          {/* Compare Icon */}
+          <Link
+            href='/compare'
+            className='relative rounded-lg p-2 text-gray-700 transition-colors hover:bg-gray-100'
+            aria-label='Compare products'
+          >
+            <FiColumns className='h-5 w-5' />
+            {compareCount > 0 && (
+              <span className='absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 text-[10px] font-bold text-white'>
+                {compareCount}
               </span>
             )}
           </Link>
