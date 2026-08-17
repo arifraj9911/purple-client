@@ -1,11 +1,11 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { FiCalendar, FiFolder, FiUser } from 'react-icons/fi';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { type BlogPost } from '@/data/blogs';
 import PostContent from './PostContent';
 import ShareButtons from './ShareButtons';
 import Comments from './Comments';
-import BlogCard from './BlogCard';
 
 interface BlogDetailPageProps {
   post: BlogPost;
@@ -28,7 +28,7 @@ export default function BlogDetailPage({ post, related }: BlogDetailPageProps) {
 
       {/* ── Featured image ── */}
       <div className='container mx-auto px-4 pt-6 md:px-6 lg:px-8'>
-        <div className='relative aspect-[16/9] w-full overflow-hidden rounded-2xl'>
+        <div className='relative h-52 w-full overflow-hidden rounded-2xl sm:h-72 lg:h-95'>
           <Image
             src={post.image}
             alt={post.title}
@@ -40,73 +40,90 @@ export default function BlogDetailPage({ post, related }: BlogDetailPageProps) {
         </div>
       </div>
 
-      {/* ── Article body ── */}
-      <article className='container mx-auto px-4 py-8 md:px-6 lg:px-8'>
-        <div className='mx-auto max-w-3xl'>
-          <div className='flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-400'>
-            <span className='flex items-center gap-1.5'>
-              <FiCalendar className='h-4 w-4' />
-              {post.date}
-            </span>
-            <span className='flex items-center gap-1.5'>
-              <FiUser className='h-4 w-4' />
-              {post.author}
-            </span>
-            <span className='flex items-center gap-1.5'>
-              <FiFolder className='h-4 w-4' />
-              {post.category}
-            </span>
-          </div>
-
-          <h1 className='mt-3 font-heading text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl'>
-            {post.title}
-          </h1>
-
-          <div className='mt-6'>
-            <PostContent blocks={post.content} />
-          </div>
-
-          {/* ── Tags + Share ── */}
-          <div className='mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-gray-100 pt-6'>
-            <div className='flex flex-wrap gap-2'>
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className='rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600'
-                >
-                  #{tag}
-                </span>
-              ))}
+      {/* ── Article body + sticky related sidebar ── */}
+      <div className='container mx-auto px-4 py-10 md:px-6 lg:px-8'>
+        <div className='grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_320px]'>
+          {/* Left column — article */}
+          <article className='min-w-0'>
+            <div className='flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-400'>
+              <span className='flex items-center gap-1.5'>
+                <FiCalendar className='h-4 w-4' />
+                {post.date}
+              </span>
+              <span className='flex items-center gap-1.5'>
+                <FiUser className='h-4 w-4' />
+                {post.author}
+              </span>
+              <span className='flex items-center gap-1.5'>
+                <FiFolder className='h-4 w-4' />
+                {post.category}
+              </span>
             </div>
-            <ShareButtons title={post.title} />
-          </div>
-        </div>
-      </article>
 
-      {/* ── Related posts ── */}
-      {related.length > 0 && (
-        <section className='bg-gray-50 py-12'>
-          <div className='container mx-auto px-4 md:px-6 lg:px-8'>
-            <h2 className='mb-6 font-heading text-xl font-bold text-gray-900 sm:text-2xl'>
-              Related Posts
-            </h2>
-            <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-              {related.map((post) => (
-                <BlogCard key={post.id} post={post} />
-              ))}
+            <h1 className='mt-3 font-heading text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl'>
+              {post.title}
+            </h1>
+
+            <div className='mt-6'>
+              <PostContent blocks={post.content} />
             </div>
-          </div>
-        </section>
-      )}
 
-      {/* ── Comments ── */}
-      <section className='bg-white py-12'>
-        <div className='container mx-auto px-4 md:px-6 lg:px-8'>
-          <div className='mx-auto max-w-3xl'>
-            <Comments postId={post.id} />
-          </div>
+            {/* ── Tags + Share ── */}
+            <div className='mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-gray-100 pt-6'>
+              <div className='flex flex-wrap gap-2'>
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className='rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-600'
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+              <ShareButtons title={post.title} />
+            </div>
+
+            {/* ── Comments ── */}
+            <div className='mt-10 border-t border-gray-100 pt-8'>
+              <Comments postId={post.id} />
+            </div>
+          </article>
+
+          {/* Right column — sticky related posts */}
+          {related.length > 0 && (
+            <aside className='lg:sticky lg:top-24 lg:self-start'>
+              <h2 className='mb-5 font-heading text-xl font-bold text-gray-900'>
+                Related Posts
+              </h2>
+              <div className='space-y-4'>
+                {related.map((rp) => (
+                  <Link
+                    key={rp.id}
+                    href={`/blog/${rp.slug}`}
+                    className='group flex gap-3 rounded-xl border border-gray-100 bg-white p-3 transition-all hover:border-primary/30 hover:shadow-sm'
+                  >
+                    <div className='relative h-20 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100'>
+                      <Image
+                        src={rp.image}
+                        alt={rp.title}
+                        fill
+                        sizes='96px'
+                        className='object-cover transition-transform duration-500 group-hover:scale-105'
+                      />
+                    </div>
+                    <div className='min-w-0'>
+                      <p className='text-xs text-gray-400'>{rp.date}</p>
+                      <h3 className='mt-1 font-heading text-sm font-semibold leading-snug text-gray-900 line-clamp-2 transition-colors group-hover:text-primary'>
+                        {rp.title}
+                      </h3>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </aside>
+          )}
         </div>
-      </section>
+      </div>
     </div>
   );
 }

@@ -36,6 +36,8 @@ export interface BlogComment {
   text: string;
   date: string;
   likes: number;
+  /** When set, this comment is a reply to the comment with this id. */
+  parentId?: number;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -262,5 +264,23 @@ export const comments: BlogComment[] = [
     text: 'Finally understood the difference between cotton and linen canvases.',
     date: '3 days ago',
     likes: 3,
+  },
+  {
+    id: 4,
+    postId: 1,
+    author: 'Nusrat Jahan',
+    text: 'Thanks Sadia! So glad the blending tips helped your work. 🎨',
+    date: '1 day ago',
+    likes: 2,
+    parentId: 1,
+  },
+  {
+    id: 5,
+    postId: 1,
+    author: 'Sadia Islam',
+    text: 'You are most welcome! Keep these guides coming.',
+    date: '20 hours ago',
+    likes: 1,
+    parentId: 4,
   },
 ];
