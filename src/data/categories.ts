@@ -130,3 +130,19 @@ export function buildCategoryTree(flatList: Category[]): Category[] {
 
   return roots;
 }
+
+/** Find a category by slug and return its id plus all descendant ids. */
+export function getCategoryIds(slug: string): number[] {
+  const root = categories.find((c) => c.slug === slug);
+  if (!root) return [];
+
+  const ids: number[] = [];
+  const walk = (parentId: number) => {
+    ids.push(parentId);
+    for (const child of categories.filter((c) => c.parentId === parentId)) {
+      walk(child.id);
+    }
+  };
+  walk(root.id);
+  return ids;
+}

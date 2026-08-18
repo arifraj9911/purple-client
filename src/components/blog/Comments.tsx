@@ -147,7 +147,7 @@ export default function Comments({ postId }: CommentsProps) {
 
   const childrenOf = (id: number) => list.filter((c) => c.parentId === id);
 
-  const renderComment = (comment: BlogComment): ReactNode => {
+  const renderComment = (comment: BlogComment, depth = 0): ReactNode => {
     const children = childrenOf(comment.id);
     const isLiked = liked.includes(comment.id);
 
@@ -205,8 +205,14 @@ export default function Comments({ postId }: CommentsProps) {
         </div>
 
         {children.length > 0 && (
-          <div className='ml-4 mt-3 space-y-3 border-l-2 border-gray-200 pl-4 sm:ml-9 sm:pl-5'>
-            {children.map((child) => renderComment(child))}
+          <div
+            className={
+              depth === 0
+                ? 'ml-4 mt-3 space-y-3 border-l-2 border-gray-200 pl-4 sm:ml-9 sm:pl-5'
+                : 'mt-3 space-y-3'
+            }
+          >
+            {children.map((child) => renderComment(child, depth + 1))}
           </div>
         )}
       </div>

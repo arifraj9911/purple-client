@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { Suspense, useState, useMemo, useEffect, useRef } from 'react';
 import { FiGrid, FiList, FiSliders } from 'react-icons/fi';
+import { useSearchParams } from 'next/navigation';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { Pagination } from '@/components/ui/pagination';
 import { ProductCard } from '@/components/ui/product-card';
@@ -13,6 +14,7 @@ import {
   getProductPriceRange,
   getCurrentPrice,
 } from '@/data/products';
+import { getCategoryIds } from '@/data/categories';
 
 const ITEMS_PER_PAGE = 9;
 const SORT_OPTIONS = [
@@ -28,10 +30,26 @@ type SortValue = (typeof SORT_OPTIONS)[number]['value'];
 type ViewMode = 'grid' | 'list';
 
 export default function ShopPage() {
+  return (
+    <Suspense fallback={<ShopPageFallback />}>
+      <ShopPageInner />
+    </Suspense>
+  );
+}
+
+function ShopPageFallback() {
+  return (
+    <div className='container mx-auto min-h-[60vh] px-4 py-12 md:px-6 lg:px-8' />
+  );
+}
+
+function ShopPageInner() {
+  const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortValue>('default');
   const [currentPage, setCurrentPage] = useState(1);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const topBarRef = useRef<HTMLDivElement>(null);
 
   // Scroll to absolute top when page changes
@@ -53,6 +71,24 @@ export default function ShopPage() {
     inStockOnly: false,
   });
 
+  /* Apply ?category= and ?q= from the URL (category shortcuts / search) */
+  useEffect(() => {
+    const categorySlug = searchParams.get('category');
+    if (categorySlug) {
+      const ids = getCategoryIds(categorySlug);
+      if (ids.length > 0) {
+        setFilters((prev) => ({ ...prev, categoryIds: ids }));
+      }
+    }
+
+    const q = searchParams.get('q');
+    if (q !== null) {
+      setSearchQuery(q);
+    }
+
+    setCurrentPage(1);
+  }, [searchParams]);
+
   // ── Filter + Sort pipeline ──
   const filteredProducts = useMemo(() => {
     let result = [...products];
@@ -60,6 +96,16 @@ export default function ShopPage() {
     // Category filter (include children? For now exact match on categoryId)
     if (filters.categoryIds.length > 0) {
       result = result.filter((p) => filters.categoryIds.includes(p.categoryId));
+    }
+
+    // Search query (title / category / brand / slug)
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      result = result.filter((p) =>
+        [p.name, p.category, p.brand, p.slug].some((value) =>
+          value.toLowerCase().includes(q),
+        ),
+      );
     }
 
     // Price range
@@ -108,7 +154,7 @@ export default function ShopPage() {
     }
 
     return result;
-  }, [filters, sortBy]);
+  }, [filters, sortBy, searchQuery]);
 
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
   const paginatedProducts = filteredProducts.slice(
@@ -219,7 +265,7 @@ export default function ShopPage() {
               </div>
 
               {/* Results count — inline on desktop, full-width below on mobile */}
-              <p className='text-sm text-gray-800 sm:order-none order-last sm:w-auto w-full'>
+              <p className='text-sm text-gray-800 sm:order-0 order-last sm:w-auto w-full'>
                 Showing{' '}
                 <span className='font-semibold'>
                   {filteredProducts.length === 0

@@ -61,7 +61,7 @@ export default function ProductCard({
   return (
     <div className='group relative flex h-full flex-col overflow-hidden rounded-xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-gray-200 hover:shadow-lg'>
       {/* ── Image ── */}
-      <Link href={`/product/${product.slug}`} className='relative block'>
+      <Link href={`/products/${product.slug}`} className='relative block'>
         <div className='relative aspect-4/3 overflow-hidden rounded-t-lg bg-gray-100'>
           {/* Blurred background image — fills gaps when object-contain leaves space */}
           <Image
@@ -122,7 +122,7 @@ export default function ProductCard({
 
         {/* Name */}
         <Link
-          href={`/product/${product.slug}`}
+          href={`/products/${product.slug}`}
           className='mb-4 text-[13px] font-medium leading-snug text-gray-800 transition-colors hover:text-primary line-clamp-2 sm:text-[15px]'
         >
           {product.name}

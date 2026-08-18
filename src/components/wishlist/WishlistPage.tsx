@@ -8,7 +8,7 @@ import { useWishlist } from '@/lib/wishlist-context';
 import { products, type Product } from '@/data/products';
 import EmptyWishlist from './EmptyWishlist';
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 8;
 
 export default function WishlistPage() {
   const { items, clearWishlist } = useWishlist();
@@ -56,15 +56,8 @@ export default function WishlistPage() {
           <EmptyWishlist />
         ) : (
           <>
-            {/* ── Heading ── */}
-            <div className='mb-6 flex flex-wrap items-center justify-between gap-3'>
-              <h1 className='flex items-center gap-2 font-heading text-xl font-bold text-gray-900 sm:text-2xl'>
-                My Wishlist
-                <span className='text-base font-medium text-gray-400'>
-                  ({items.length} {items.length === 1 ? 'item' : 'items'})
-                </span>
-              </h1>
-
+            {/* ── Clear All action ── */}
+            <div className='mb-4 flex justify-end'>
               <button
                 onClick={clearWishlist}
                 className='text-sm font-medium text-red-500 transition-colors hover:text-red-600 hover:underline'

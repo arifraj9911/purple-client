@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { blogPosts } from '@/data/blogs';
+import { blogPosts, parseBlogDate } from '@/data/blogs';
 import { BlogDetailPage } from '@/components/blog';
 
 interface BlogDetailRouteProps {
@@ -31,9 +31,10 @@ export default async function BlogDetailRoute({
   const post = blogPosts.find((p) => p.slug === slug);
   if (!post) notFound();
 
-  const others = blogPosts.filter((p) => p.id !== post.id);
-  const sameCategory = others.filter((p) => p.category === post.category);
-  const related = (sameCategory.length ? sameCategory : others).slice(0, 3);
+  const recent = blogPosts
+    .filter((p) => p.id !== post.id)
+    .sort((a, b) => parseBlogDate(b.date) - parseBlogDate(a.date))
+    .slice(0, 3);
 
-  return <BlogDetailPage post={post} related={related} />;
+  return <BlogDetailPage post={post} recent={recent} />;
 }

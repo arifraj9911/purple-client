@@ -9,10 +9,10 @@ import Comments from './Comments';
 
 interface BlogDetailPageProps {
   post: BlogPost;
-  related: BlogPost[];
+  recent: BlogPost[];
 }
 
-export default function BlogDetailPage({ post, related }: BlogDetailPageProps) {
+export default function BlogDetailPage({ post, recent }: BlogDetailPageProps) {
   return (
     <div className='bg-white'>
       {/* ── Breadcrumb ── */}
@@ -26,26 +26,33 @@ export default function BlogDetailPage({ post, related }: BlogDetailPageProps) {
         />
       </div>
 
-      {/* ── Featured image ── */}
-      <div className='container mx-auto px-4 pt-6 md:px-6 lg:px-8'>
-        <div className='relative h-52 w-full overflow-hidden rounded-2xl sm:h-72 lg:h-95'>
-          <Image
-            src={post.image}
-            alt={post.title}
-            fill
-            priority
-            sizes='(max-width: 1280px) 100vw, 1280px'
-            className='object-cover'
-          />
-        </div>
-      </div>
-
-      {/* ── Article body + sticky related sidebar ── */}
+      {/* ── Article body + sticky recent posts sidebar ── */}
       <div className='container mx-auto px-4 py-10 md:px-6 lg:px-8'>
         <div className='grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_320px]'>
           {/* Left column — article */}
           <article className='min-w-0'>
-            <div className='flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-400'>
+            {/* Featured image — only inside the left (article) column */}
+            <div className='relative h-48 w-full overflow-hidden rounded-2xl bg-gray-100 sm:h-64 lg:h-100'>
+              {/* Blurred background fills the letterboxed sides */}
+              <Image
+                src={post.image}
+                alt=''
+                fill
+                sizes='(max-width: 1024px) 100vw, 800px'
+                className='absolute inset-0 h-full w-full scale-110 object-cover blur-xl saturate-150'
+                aria-hidden='true'
+              />
+              <Image
+                src={post.image}
+                alt={post.title}
+                fill
+                priority
+                sizes='(max-width: 1024px) 100vw, 800px'
+                className='relative z-10 h-full w-full object-contain'
+              />
+            </div>
+
+            <div className='mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-400'>
               <span className='flex items-center gap-1.5'>
                 <FiCalendar className='h-4 w-4' />
                 {post.date}
@@ -89,14 +96,14 @@ export default function BlogDetailPage({ post, related }: BlogDetailPageProps) {
             </div>
           </article>
 
-          {/* Right column — sticky related posts */}
-          {related.length > 0 && (
-            <aside className='lg:sticky lg:top-24 lg:self-start'>
+          {/* Right column — sticky recent posts */}
+          {recent.length > 0 && (
+            <aside className='lg:sticky lg:top-32 lg:self-start lg:h-fit'>
               <h2 className='mb-5 font-heading text-xl font-bold text-gray-900'>
-                Related Posts
+                Recent Posts
               </h2>
               <div className='space-y-4'>
-                {related.map((rp) => (
+                {recent.map((rp) => (
                   <Link
                     key={rp.id}
                     href={`/blog/${rp.slug}`}

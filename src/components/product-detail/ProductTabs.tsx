@@ -96,7 +96,7 @@ export default function ProductTabs({ product }: ProductTabsProps) {
 /* ─── Description (rich-text blocks) ─── */
 function DescriptionContent({ blocks }: { blocks: DescriptionBlock[] }) {
   if (blocks.length === 0) {
-    return <p className='text-gray-500'>No description available.</p>;
+    return <p className='text-base text-gray-500'>No description available.</p>;
   }
 
   return (
@@ -118,7 +118,7 @@ function DescriptionContent({ blocks }: { blocks: DescriptionBlock[] }) {
                 {block.items.map((item, itemIndex) => (
                   <li
                     key={itemIndex}
-                    className='flex items-start gap-2 leading-relaxed text-gray-600'
+                    className='flex items-start gap-2 text-base leading-relaxed text-gray-600'
                   >
                     <FiCheck className='mt-1 h-4 w-4 shrink-0 text-primary' />
                     <span>{item}</span>
@@ -128,7 +128,10 @@ function DescriptionContent({ blocks }: { blocks: DescriptionBlock[] }) {
             );
           default:
             return (
-              <p key={index} className='leading-relaxed text-gray-600'>
+              <p
+                key={index}
+                className='text-base leading-relaxed text-gray-600'
+              >
                 {block.text}
               </p>
             );
@@ -166,7 +169,7 @@ function InfoTable({ product }: { product: Product }) {
 
   return (
     <div className='overflow-hidden rounded-xl border border-gray-200'>
-      <table className='w-full text-left text-sm'>
+      <table className='w-full text-left text-base'>
         <tbody>
           {rows.map((row, index) => (
             <tr
@@ -291,7 +294,7 @@ function ReviewsPanel({ product }: { product: Product }) {
                   />
                 ))}
               </div>
-              <p className='mt-2 text-sm leading-relaxed text-gray-600'>
+              <p className='mt-2 text-base leading-relaxed text-gray-600'>
                 {review.comment}
               </p>
             </li>
@@ -399,7 +402,7 @@ function ShippingInfoPanel() {
 
   return (
     <div className='space-y-4'>
-      <p className='leading-relaxed text-gray-600'>
+      <p className='text-base leading-relaxed text-gray-600'>
         We deliver to all 64 districts of Bangladesh through trusted courier
         partners. Orders placed before 3 PM are dispatched the same day, and you
         will receive a tracking number as soon as your parcel ships.
@@ -408,7 +411,7 @@ function ShippingInfoPanel() {
         {items.map((item) => (
           <li
             key={item}
-            className='flex items-start gap-2 leading-relaxed text-gray-600'
+            className='flex items-start gap-2 text-base leading-relaxed text-gray-600'
           >
             <FiTruck className='mt-1 h-4 w-4 shrink-0 text-primary' />
             <span>{item}</span>
@@ -430,7 +433,7 @@ function ReturnPolicyPanel() {
 
   return (
     <div className='space-y-4'>
-      <p className='leading-relaxed text-gray-600'>
+      <p className='text-base leading-relaxed text-gray-600'>
         Not happy with your purchase? No worries — we offer a simple,
         hassle-free return process so you can shop with confidence.
       </p>
@@ -438,7 +441,7 @@ function ReturnPolicyPanel() {
         {items.map((item) => (
           <li
             key={item}
-            className='flex items-start gap-2 leading-relaxed text-gray-600'
+            className='flex items-start gap-2 text-base leading-relaxed text-gray-600'
           >
             <FiRefreshCw className='mt-1 h-4 w-4 shrink-0 text-primary' />
             <span>{item}</span>

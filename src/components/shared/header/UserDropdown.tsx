@@ -43,11 +43,11 @@ export default function UserDropdown() {
         aria-expanded={isOpen}
       >
         {user ? (
-          <span className='flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-white'>
+          <span className='flex h-6.5 w-6.5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white'>
             {initial}
           </span>
         ) : (
-          <FiUser className='h-5 w-5' />
+          <FiUser className='h-6.5 w-6.5' />
         )}
       </button>
 

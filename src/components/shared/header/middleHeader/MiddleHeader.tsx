@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { FiMenu, FiSearch, FiFeather, FiShoppingCart } from 'react-icons/fi';
+import { FiMenu, FiFeather, FiShoppingCart } from 'react-icons/fi';
 import { useCart } from '@/lib/cart-context';
+import SearchBar from '../SearchBar';
 
 interface MiddleHeaderProps {
   onMenuToggle: () => void;
@@ -10,6 +11,7 @@ interface MiddleHeaderProps {
 
 export default function MiddleHeader({ onMenuToggle }: MiddleHeaderProps) {
   const { totalItems, openDrawer } = useCart();
+
   return (
     <div className='border-b border-gray-200 bg-white'>
       <div className='container mx-auto flex items-center gap-4 px-4 md:px-6 lg:px-8 py-3 md:py-4'>
@@ -34,17 +36,7 @@ export default function MiddleHeader({ onMenuToggle }: MiddleHeaderProps) {
         {/* Search Bar — Desktop only */}
         <div className='hidden flex-1 lg:block'>
           <div className='relative mx-auto max-w-xl'>
-            <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
-              <FiSearch className='h-5 w-5 text-gray-400' />
-            </div>
-            <input
-              type='text'
-              placeholder='Search for products...'
-              className='w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-20 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-primary focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary'
-            />
-            <button className='absolute inset-y-1 right-1 rounded-md bg-primary px-4 text-sm font-medium text-white transition-colors hover:bg-primary-dark'>
-              Search
-            </button>
+            <SearchBar showSubmitButton inputClassName='py-2.5' />
           </div>
         </div>
 
@@ -90,16 +82,7 @@ export default function MiddleHeader({ onMenuToggle }: MiddleHeaderProps) {
 
       {/* Mobile Search Bar — below the logo row, full width */}
       <div className='lg:hidden border-t border-gray-100 bg-white px-4 py-2'>
-        <div className='relative'>
-          <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
-            <FiSearch className='h-4 w-4 text-gray-400' />
-          </div>
-          <input
-            type='text'
-            placeholder='Search for products...'
-            className='w-full rounded-lg border border-gray-200 bg-gray-50 py-2 pl-9 pr-3 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-primary focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary'
-          />
-        </div>
+        <SearchBar inputClassName='py-2' />
       </div>
     </div>
   );

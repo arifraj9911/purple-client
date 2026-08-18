@@ -17,7 +17,7 @@ export default function AllProducts() {
             </h2>
           </div>
           <Link
-            href='/shop'
+            href='/products'
             className='hidden shrink-0 items-center gap-1 text-sm font-medium text-primary transition-colors hover:text-primary-dark sm:flex'
           >
             View All
@@ -48,7 +48,7 @@ export default function AllProducts() {
         {/* Mobile View All */}
         <div className='mt-6 text-center sm:hidden'>
           <Link
-            href='/shop'
+            href='/products'
             className='inline-flex items-center gap-1 text-sm font-medium text-primary'
           >
             View All Products

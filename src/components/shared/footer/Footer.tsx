@@ -5,6 +5,7 @@ import { FiFeather } from 'react-icons/fi';
 const QUICK_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Shop', href: '/shop' },
+  { label: 'Products', href: '/products' },
   { label: 'Blog', href: '/blog' },
   { label: 'About Us', href: '/about' },
   { label: 'Contact Us', href: '/contact' },
@@ -227,9 +228,6 @@ export default function Footer() {
             </span>
             <span className='rounded-md bg-white/10 px-3 py-1.5 text-xs font-medium text-gray-400'>
               MasterCard
-            </span>
-            <span className='rounded-md bg-white/10 px-3 py-1.5 text-xs font-medium text-gray-400'>
-              SSL
             </span>
           </div>
         </div>

@@ -24,16 +24,7 @@ export default function BlogPage() {
       </div>
 
       <div className='container mx-auto px-4 py-6 pb-12 md:px-6 lg:px-8'>
-        <div className='mb-8 text-center'>
-          <h1 className='font-heading text-2xl font-bold text-gray-900 sm:text-3xl'>
-            Our Blog
-          </h1>
-          <p className='mx-auto mt-2 max-w-xl text-sm text-gray-500 sm:text-base'>
-            Tips, guides and inspiration for artists and crafters.
-          </p>
-        </div>
-
-        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
           {paginatedPosts.map((post, index) => (
             <BlogCard
               key={post.id}

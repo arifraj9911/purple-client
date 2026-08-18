@@ -238,6 +238,29 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
+/* ─── Helpers ─── */
+
+const MONTHS: Record<string, number> = {
+  Jan: 0,
+  Feb: 1,
+  Mar: 2,
+  Apr: 3,
+  May: 4,
+  Jun: 5,
+  Jul: 6,
+  Aug: 7,
+  Sep: 8,
+  Oct: 9,
+  Nov: 10,
+  Dec: 11,
+};
+
+/** Parse a blog date string like "5 Aug, 2026" into a timestamp. */
+export const parseBlogDate = (date: string): number => {
+  const [day, month, year] = date.replace(',', '').split(' ');
+  return new Date(Number(year), MONTHS[month], Number(day)).getTime();
+};
+
 /* ─── Dummy comments ─── */
 
 export const comments: BlogComment[] = [

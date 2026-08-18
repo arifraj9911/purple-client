@@ -1,7 +1,15 @@
+'use client';
+
+import Link from 'next/link';
 import { FaFacebook, FaInstagram, FaTiktok } from 'react-icons/fa';
-import { FiPhone, FiMail } from 'react-icons/fi';
+import { FiPhone, FiMail, FiHeart, FiColumns } from 'react-icons/fi';
+import { useWishlist } from '@/lib/wishlist-context';
+import { useCompare } from '@/lib/compare-context';
 
 export default function TopHeader() {
+  const { totalItems: wishlistCount } = useWishlist();
+  const { totalItems: compareCount } = useCompare();
+
   return (
     <div className='hidden lg:block bg-secondary text-white'>
       <div className='container mx-auto flex items-center justify-between px-4 md:px-6 lg:px-8 py-2 text-small'>
@@ -36,7 +44,7 @@ export default function TopHeader() {
           </a>
         </div>
 
-        {/* Right: Phone | Email */}
+        {/* Right: Phone | Email | Wishlist | Compare */}
         <div className='flex items-center gap-4'>
           <a
             href='tel:+8801700000000'
@@ -53,6 +61,34 @@ export default function TopHeader() {
             <FiMail className='h-3.5 w-3.5' />
             <span>info@purplebd.com</span>
           </a>
+
+          <span className='h-4 w-px bg-gray-600' />
+
+          <Link
+            href='/wishlist'
+            className='relative flex items-center justify-center text-gray-300 transition-colors hover:text-white'
+            aria-label='Wishlist'
+          >
+            <FiHeart className='h-4 w-4' />
+            {wishlistCount > 0 && (
+              <span className='absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-sale-badge px-1 text-[10px] font-bold text-white'>
+                {wishlistCount}
+              </span>
+            )}
+          </Link>
+
+          <Link
+            href='/compare'
+            className='relative flex items-center justify-center text-gray-300 transition-colors hover:text-white'
+            aria-label='Compare products'
+          >
+            <FiColumns className='h-4 w-4' />
+            {compareCount > 0 && (
+              <span className='absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white'>
+                {compareCount}
+              </span>
+            )}
+          </Link>
         </div>
       </div>
     </div>

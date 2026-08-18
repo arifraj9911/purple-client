@@ -26,7 +26,7 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { isInCompare, addToCompare, removeFromCompare } = useCompare();
 
-  const [quantity, setQuantity] = useState(1);
+  const [quantityInput, setQuantityInput] = useState('1');
   const [compareNotice, setCompareNotice] = useState('');
   const compared = isInCompare(product.id);
   const wishlisted = isInWishlist(product.id);
@@ -44,6 +44,16 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
       ))
     : null;
 
+  const maxQuantity = product.stock || 1;
+
+  const parseQuantity = (): number => {
+    const parsed = parseInt(quantityInput, 10);
+    return Number.isNaN(parsed) || parsed < 1 ? 1 : parsed;
+  };
+
+  const clampQuantity = (value: number) =>
+    Math.min(maxQuantity, Math.max(1, value));
+
   const cartPayload = {
     id: product.id,
     name: product.name,
@@ -51,26 +61,38 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
     basePrice: hasDiscount ? product.basePrice : undefined,
     discountPrice: product.discountPrice ?? undefined,
     image: product.images[0],
-    quantity,
     slug: product.slug,
   };
 
   const addToCart = () => {
     if (outOfStock) return;
-    addItem(cartPayload);
+    addItem({ ...cartPayload, quantity: clampQuantity(parseQuantity()) });
     openDrawer();
   };
 
   const buyNow = () => {
     if (outOfStock) return;
-    addItem(cartPayload);
+    addItem({ ...cartPayload, quantity: clampQuantity(parseQuantity()) });
     // Opens the cart drawer so the user can complete checkout.
     // TODO: navigate to /checkout once that page exists.
     openDrawer();
   };
 
   const changeQuantity = (delta: number) => {
-    setQuantity((q) => Math.min(product.stock || 1, Math.max(1, q + delta)));
+    const next = Math.max(1, parseQuantity() + delta);
+    setQuantityInput(String(next));
+  };
+
+  const handleQuantityInput = (value: string) => {
+    if (value === '') {
+      setQuantityInput('');
+      return;
+    }
+    setQuantityInput(value.replace(/\D/g, ''));
+  };
+
+  const commitQuantity = () => {
+    setQuantityInput(String(parseQuantity()));
   };
 
   const handleToggleCompare = () => {
@@ -192,25 +214,31 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
         </p>
       </div>
 
-      {/* ── Quantity + Wishlist / Compare ── */}
+      {/* ── Quantity + actions (all in one aligned row) ── */}
       <div className='mt-4 flex flex-wrap items-center gap-2 sm:gap-3'>
         <div className='flex items-center rounded-lg border border-gray-200'>
           <button
             type='button'
             onClick={() => changeQuantity(-1)}
-            disabled={outOfStock || quantity <= 1}
+            disabled={outOfStock || parseQuantity() <= 1}
             aria-label='Decrease quantity'
             className='flex h-11 w-11 items-center justify-center text-gray-500 transition-colors hover:text-primary disabled:opacity-40'
           >
             <FiMinus className='h-4 w-4' />
           </button>
-          <span className='w-10 text-center text-sm font-semibold text-gray-900'>
-            {quantity}
-          </span>
+          <input
+            type='text'
+            inputMode='numeric'
+            value={quantityInput}
+            onChange={(e) => handleQuantityInput(e.target.value)}
+            onBlur={commitQuantity}
+            aria-label='Quantity'
+            className='h-11 w-14 border-x border-gray-200 bg-white text-center text-sm font-semibold text-gray-900 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary'
+          />
           <button
             type='button'
             onClick={() => changeQuantity(1)}
-            disabled={outOfStock || quantity >= product.stock}
+            disabled={outOfStock}
             aria-label='Increase quantity'
             className='flex h-11 w-11 items-center justify-center text-gray-500 transition-colors hover:text-primary disabled:opacity-40'
           >
@@ -247,6 +275,29 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
         >
           <FiColumns className='h-5 w-5' />
         </button>
+
+        {/* Add to Cart + Buy Now — same row, share remaining width */}
+        <div className='flex w-full gap-2 sm:w-auto sm:flex-1 sm:gap-3'>
+          <button
+            type='button'
+            onClick={addToCart}
+            disabled={outOfStock}
+            className='flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400'
+          >
+            <FiShoppingCart className='h-4 w-4' />
+            Add to Cart
+          </button>
+
+          <button
+            type='button'
+            onClick={buyNow}
+            disabled={outOfStock}
+            className='flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-secondary px-4 text-sm font-semibold text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400'
+          >
+            <FiZap className='h-4 w-4' />
+            Buy Now
+          </button>
+        </div>
       </div>
 
       {compareNotice && (
@@ -254,29 +305,6 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
           {compareNotice}
         </p>
       )}
-
-      {/* ── Add to Cart + Buy Now (side-by-side) ── */}
-      <div className='mt-3 flex gap-3 sm:gap-3'>
-        <button
-          type='button'
-          onClick={addToCart}
-          disabled={outOfStock}
-          className='flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400'
-        >
-          <FiShoppingCart className='h-4 w-4' />
-          Add to Cart
-        </button>
-
-        <button
-          type='button'
-          onClick={buyNow}
-          disabled={outOfStock}
-          className='flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400'
-        >
-          <FiZap className='h-4 w-4' />
-          Buy Now
-        </button>
-      </div>
 
       {/* ── Compare feedback ── */}
       {compared && (

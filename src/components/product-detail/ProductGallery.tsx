@@ -3,7 +3,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import useEmblaCarousel from 'embla-carousel-react';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiMaximize2,
+  FiX,
+} from 'react-icons/fi';
 
 interface ProductGalleryProps {
   images: string[];
@@ -14,6 +19,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
   const slides = images;
 
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isZoomed, setIsZoomed] = useState(false);
 
   const [mainRef, mainApi] = useEmblaCarousel({ align: 'start' });
   const [thumbsRef, thumbsApi] = useEmblaCarousel({
@@ -44,6 +50,20 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
       mainApi.off('init', onSelect);
     };
   }, [mainApi, thumbsApi]);
+
+  /* Lock body scroll + close on Escape while the lightbox is open */
+  useEffect(() => {
+    if (!isZoomed) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsZoomed(false);
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [isZoomed]);
 
   const canScrollPrev = mainApi?.canScrollPrev() ?? false;
   const canScrollNext = mainApi?.canScrollNext() ?? false;
@@ -127,12 +147,15 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
           </>
         )}
 
-        {/* Slide counter */}
-        {hasMultiple && (
-          <span className='absolute bottom-2 right-2 z-20 rounded-full bg-black/60 px-2 py-0.5 text-[11px] font-medium text-white lg:bottom-3 lg:right-3 lg:px-2.5 lg:py-1 lg:text-xs'>
-            {selectedIndex + 1} / {slides.length}
-          </span>
-        )}
+        {/* Zoom button */}
+        <button
+          type='button'
+          onClick={() => setIsZoomed(true)}
+          aria-label='Zoom image'
+          className='absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white/90 text-gray-700 shadow-sm backdrop-blur transition-all duration-300 hover:border-primary hover:text-primary'
+        >
+          <FiMaximize2 className='h-4 w-4' />
+        </button>
       </div>
 
       {/* ── Thumbnails ── */}
@@ -149,6 +172,41 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
           </div>
         </>
       )}
+
+      {/* ── Zoom lightbox ── */}
+      <div
+        role='dialog'
+        aria-modal='true'
+        aria-label='Zoomed product image'
+        onClick={() => setIsZoomed(false)}
+        className={`fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 transition-opacity duration-300 ${
+          isZoomed ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+      >
+        <button
+          type='button'
+          onClick={() => setIsZoomed(false)}
+          aria-label='Close zoom'
+          className='absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/25'
+        >
+          <FiX className='h-5 w-5' />
+        </button>
+
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className={`relative h-[80vh] w-full max-w-4xl transition-transform duration-300 ${
+            isZoomed ? 'scale-100' : 'scale-95'
+          }`}
+        >
+          <Image
+            src={slides[selectedIndex]}
+            alt={`${alt} — zoomed image ${selectedIndex + 1}`}
+            fill
+            sizes='100vw'
+            className='object-contain'
+          />
+        </div>
+      </div>
     </div>
   );
 }
