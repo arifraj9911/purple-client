@@ -69,7 +69,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         }`}
       >
         {/* ===== TOP: Purple BD Logo (left) + Close X (right) ===== */}
-        <div className='flex items-center justify-between border-b border-gray-200 px-4 py-4'>
+        <div className='flex items-center justify-between border-b border-gray-300 px-4 py-4'>
           <Link
             href='/'
             className='font-heading text-lg font-bold text-secondary flex items-center gap-1.5'
@@ -88,7 +88,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </div>
 
         {/* ===== TABS: CATEGORIES | MENU — 50/50 full width with bg ===== */}
-        <div className='flex border-b border-gray-200 px-4 py-3'>
+        <div className='flex border-b border-gray-300 px-4 py-3'>
           <div className='flex w-full rounded-lg bg-gray-100 p-1'>
             <button
               onClick={() => setActiveTab('categories')}
@@ -116,10 +116,10 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         {/* ===== DRAWER CONTENT ===== */}
         <div
           className='overflow-y-auto'
-          style={{ height: 'calc(100% - 210px)' }}
+          style={{ height: 'calc(100% - 195px)' }}
         >
           {activeTab === 'categories' && (
-            <div className='px-4 py-3'>
+            <div className='px-3 py-2'>
               <ul className='space-y-0.5'>
                 {buildCategoryTree(categories).map((cat) => (
                   <MobileCategoryItem
@@ -132,7 +132,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </div>
           )}
           {activeTab === 'menu' && (
-            <div className='px-4 py-3'>
+            <div className='px-3 py-2'>
               <ul className='space-y-0.5'>
                 {NAV_LINKS.map((link) => {
                   const isActive = pathname === link.href;
@@ -140,7 +140,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-colors ${
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                           isActive
                             ? 'bg-primary-light text-primary'
                             : 'text-gray-700 hover:bg-gray-50 hover:text-primary'
@@ -158,7 +158,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </div>
 
         {/* ===== BOTTOM: Follow Us Social ===== */}
-        <div className='absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-white px-4 py-3'>
+        <div className='absolute bottom-0 left-0 right-0 border-t border-gray-300 bg-white px-4 py-3'>
           <div className='flex items-center justify-center gap-5'>
             <span className='text-xs text-gray-500 font-medium'>
               Follow Us:
@@ -219,7 +219,7 @@ function MobileCategoryItem({
       >
         <Link
           href={`/shop?category=${category.slug}`}
-          className={`flex flex-1 items-center gap-2 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:text-primary ${
+          className={`flex flex-1 items-center gap-2 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:text-primary ${
             depth === 0 ? 'px-3' : 'px-2'
           }`}
           onClick={onClose}
@@ -234,7 +234,7 @@ function MobileCategoryItem({
               e.stopPropagation();
               setExpanded(!expanded);
             }}
-            className='mr-1 rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700'
+            className='mr-1 rounded-lg p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700'
             aria-label={expanded ? 'Collapse' : 'Expand'}
             aria-expanded={expanded}
           >

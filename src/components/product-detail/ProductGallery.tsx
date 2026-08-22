@@ -98,25 +98,15 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
             {slides.map((src, index) => (
               <div
                 key={`${src}-${index}`}
-                className='relative aspect-4/3 min-w-0 flex-[0_0_100%]'
+                className='relative w-full h-[400px] min-w-0 flex-[0_0_100%] overflow-hidden bg-gray-50 flex items-center justify-center'
               >
-                {/* Blurred backdrop — fills gaps when object-contain leaves space */}
-                <Image
-                  src={src}
-                  alt=''
-                  fill
-                  sizes='(max-width: 1024px) 100vw, 50vw'
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  className='scale-110 object-cover blur-xl saturate-150'
-                  aria-hidden='true'
-                />
                 <Image
                   src={src}
                   alt={`${alt} — image ${index + 1}`}
                   fill
                   sizes='(max-width: 1024px) 100vw, 50vw'
                   loading={index === 0 ? 'eager' : 'lazy'}
-                  className='relative z-10 rounded-md object-contain p-4'
+                  className='relative z-10 rounded-md p-1.5 rounded-lg!'
                 />
               </div>
             ))}

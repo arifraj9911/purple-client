@@ -13,7 +13,7 @@ export default function MiddleHeader({ onMenuToggle }: MiddleHeaderProps) {
   const { totalItems, openDrawer } = useCart();
 
   return (
-    <div className='border-b border-gray-200 bg-white'>
+    <div className='border-b border-gray-300 bg-white'>
       <div className='container mx-auto flex items-center gap-4 px-4 md:px-6 lg:px-8 py-3 md:py-4'>
         {/* Mobile: Hamburger Menu — left */}
         <button

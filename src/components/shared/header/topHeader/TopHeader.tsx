@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FaFacebook, FaInstagram, FaTiktok } from 'react-icons/fa';
-import { FiPhone, FiMail, FiHeart, FiColumns } from 'react-icons/fi';
+import { FiPhone, FiMail, FiHeart, FiRepeat } from 'react-icons/fi';
 import { useWishlist } from '@/lib/wishlist-context';
 import { useCompare } from '@/lib/compare-context';
 
@@ -71,20 +71,22 @@ export default function TopHeader() {
           >
             <FiHeart className='h-4 w-4' />
             {wishlistCount > 0 && (
-              <span className='absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-sale-badge px-1 text-[10px] font-bold text-white'>
+              <span className='absolute -right-2 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-sale-badge px-1 text-[8.5px] font-bold leading-none text-white'>
                 {wishlistCount}
               </span>
             )}
           </Link>
+
+          <span className='h-4 w-px bg-gray-600' />
 
           <Link
             href='/compare'
             className='relative flex items-center justify-center text-gray-300 transition-colors hover:text-white'
             aria-label='Compare products'
           >
-            <FiColumns className='h-4 w-4' />
+            <FiRepeat className='h-4 w-4' />
             {compareCount > 0 && (
-              <span className='absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-white'>
+              <span className='absolute -right-2 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-primary px-1 text-[8.5px] font-bold leading-none text-white'>
                 {compareCount}
               </span>
             )}

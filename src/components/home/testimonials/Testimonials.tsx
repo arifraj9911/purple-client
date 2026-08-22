@@ -10,7 +10,7 @@ import { testimonials, type Testimonial } from '@/data/testimonials';
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <div className='relative flex h-full flex-col rounded-2xl border border-gray-100 bg-white'>
+    <div className='relative flex h-full flex-col rounded-2xl border border-gray-300 bg-white'>
       {/* Quote Icon — half outside the card top */}
       <span className='absolute -top-5 left-6 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white'>
         <svg
@@ -55,7 +55,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
           <p className='text-sm font-semibold text-gray-900'>
             {testimonial.name}
           </p>
-          <p className='text-xs text-gray-400'>📍 {testimonial.location}</p>
+          <p className='text-xs text-gray-400'>{testimonial.location}</p>
         </div>
       </div>
     </div>
@@ -92,13 +92,13 @@ export default function Testimonials() {
   const canScrollNext = emblaApi?.canScrollNext() ?? false;
 
   return (
-    <section className='bg-gray-50 py-12 sm:py-16 lg:py-20'>
+    <section className='bg-gray-50 py-8 sm:py-12'>
       <div className='container mx-auto px-4 md:px-6 lg:px-8'>
         {/* ── Header ── */}
         <div className='mb-4 flex items-end justify-between md:mb-8'>
           <div>
             <span className='inline-block rounded-full bg-primary-light px-3 py-1 text-xs font-semibold text-primary'>
-              💬 Customer Reviews
+            Customer Reviews
             </span>
             <h2 className='mt-1 font-heading text-2xl font-bold text-gray-900 sm:text-3xl md:mt-2.5'>
               What Our Customers Say
@@ -110,12 +110,12 @@ export default function Testimonials() {
             <button
               onClick={scrollPrev}
               disabled={!canScrollPrev}
-              className='flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:border-primary hover:text-primary disabled:opacity-30'
+              className='flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-gray-400 bg-white text-gray-500 transition-colors hover:border-primary hover:text-primary disabled:opacity-30'
               aria-label='Previous testimonial'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
-                className='h-4 w-4'
+                className='h-3.5 w-3.5 sm:h-4 sm:w-4'
                 fill='none'
                 viewBox='0 0 24 24'
                 stroke='currentColor'
@@ -131,12 +131,12 @@ export default function Testimonials() {
             <button
               onClick={scrollNext}
               disabled={!canScrollNext}
-              className='flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:border-primary hover:text-primary disabled:opacity-30'
+              className='flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-gray-400 bg-white text-gray-500 transition-colors hover:border-primary hover:text-primary disabled:opacity-30'
               aria-label='Next testimonial'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
-                className='h-4 w-4'
+                className='h-3.5 w-3.5 sm:h-4 sm:w-4'
                 fill='none'
                 viewBox='0 0 24 24'
                 stroke='currentColor'
@@ -154,11 +154,11 @@ export default function Testimonials() {
 
         {/* ── Carousel ── */}
         <div className='overflow-hidden py-6' ref={emblaRef}>
-          <div className='flex items-stretch gap-4 sm:gap-5 md:gap-6'>
+          <div className='flex items-stretch gap-3 sm:gap-5 md:gap-6'>
             {testimonials.map((testimonial) => (
               <div
                 key={testimonial.id}
-                className='w-[85vw] min-w-0 shrink-0 sm:w-[60vw] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(33.333%-16px)] 2xl:w-[calc(33.333%-16px)]'
+                className='w-[65vw] min-w-0 shrink-0 sm:w-[60vw] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(33.333%-16px)] 2xl:w-[calc(33.333%-16px)]'
               >
                 <TestimonialCard testimonial={testimonial} />
               </div>

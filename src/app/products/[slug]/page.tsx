@@ -50,7 +50,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       </div>
 
       {/* ── Gallery + Info ── */}
-      <div className='container mx-auto px-4 py-8 md:px-6 lg:px-8 lg:py-12'>
+      <div className='container mx-auto px-4 py-6 md:px-6 lg:px-8 lg:py-8'>
         <div className='grid gap-8 lg:grid-cols-2 lg:gap-12'>
           <ProductGallery images={product.images} alt={product.name} />
           <ProductPurchase product={product} />

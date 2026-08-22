@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiHome, FiHeart, FiUser, FiColumns } from 'react-icons/fi';
+import { FiHome, FiHeart, FiUser, FiRepeat } from 'react-icons/fi';
 import { useAuth } from '@/lib/auth-context';
 
 export default function MobileBottomNav() {
@@ -12,7 +12,7 @@ export default function MobileBottomNav() {
   const navItems = [
     { label: 'Home', href: '/', icon: FiHome },
     { label: 'Wishlist', href: '/wishlist', icon: FiHeart },
-    { label: 'Compare', href: '/compare', icon: FiColumns },
+    { label: 'Compare', href: '/compare', icon: FiRepeat },
     {
       label: user ? 'Account' : 'Login',
       href: user ? '/user-dashboard' : '/login',
@@ -21,7 +21,7 @@ export default function MobileBottomNav() {
   ];
 
   return (
-    <div className='fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white lg:hidden safe-area-bottom'>
+    <div className='fixed bottom-0 left-0 right-0 z-50 border-t border-gray-300 bg-white lg:hidden safe-area-bottom'>
       <nav className='flex items-center justify-around'>
         {navItems.map((item) => {
           const isActive = pathname === item.href;

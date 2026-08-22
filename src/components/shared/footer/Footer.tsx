@@ -9,7 +9,6 @@ const QUICK_LINKS = [
   { label: 'Blog', href: '/blog' },
   { label: 'About Us', href: '/about' },
   { label: 'Contact Us', href: '/contact' },
-  { label: 'Offers', href: '/offers' },
 ];
 
 const CUSTOMER_SERVICE = [
@@ -25,7 +24,7 @@ export default function Footer() {
            MAIN CONTENT — 4-column grid
            Mobile: 1 col → Tablet: 2 cols → Desktop: 4 cols
            ============================================= */}
-      <div className='container mx-auto px-4 md:px-6 lg:px-8 py-12 md:py-16'>
+      <div className='container mx-auto px-4 md:px-6 lg:px-8 pt-12 pb-8 md:py-14'>
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-6'>
           {/* ===== COL A: About Us (30%) ===== */}
           <div className='space-y-4'>
@@ -39,7 +38,7 @@ export default function Footer() {
             </Link>
 
             {/* Description */}
-            <p className='text-sm leading-relaxed text-gray-400 max-w-[75%]'>
+            <p className='text-sm leading-relaxed text-gray-400 md:max-w-[75%]'>
               Your one-stop destination for authentic handicrafts, art supplies,
               and creative materials in Bangladesh. We bring the finest quality
               products to your doorstep.

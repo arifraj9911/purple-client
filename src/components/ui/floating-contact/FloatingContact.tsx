@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FiMessageCircle, FiPhone, FiX } from 'react-icons/fi';
 import { FaWhatsapp, FaFacebookMessenger } from 'react-icons/fa';
 import { useCart } from '@/lib/cart-context';
@@ -35,11 +35,27 @@ const CONTACT_OPTIONS: ContactOption[] = [
 
 export default function FloatingContact() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const { isDrawerOpen } = useCart();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <div
-      className={`fixed right-5 bottom-26.5 z-50 flex flex-col items-center gap-2 transition-opacity duration-300 lg:right-5 lg:bottom-17 ${
+      className={`fixed right-5 z-50 flex flex-col items-center gap-2 transition-all duration-300 ease-in-out ${
+        showScrollTop
+          ? 'bottom-26.5 lg:bottom-17'
+          : 'bottom-16 lg:bottom-6'
+      } ${
         isDrawerOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
       }`}
     >

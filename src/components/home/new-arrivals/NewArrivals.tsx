@@ -34,7 +34,7 @@ export default function NewArrivals() {
   const canScrollNext = emblaApi?.canScrollNext() ?? false;
 
   return (
-    <section className='bg-white py-12 sm:py-16 lg:py-20'>
+    <section className='bg-white py-8 sm:py-12'>
       <div className='container mx-auto px-4 md:px-6 lg:px-8'>
         {/* ── Header ── */}
         <div className='mb-4 md:mb-8 flex items-end justify-between'>
@@ -52,12 +52,12 @@ export default function NewArrivals() {
             <button
               onClick={scrollPrev}
               disabled={!canScrollPrev}
-              className='flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:border-primary hover:text-primary disabled:opacity-30'
+              className='flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-gray-400 bg-white text-gray-500 transition-colors hover:border-primary hover:text-primary disabled:opacity-30'
               aria-label='Previous'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
-                className='h-4 w-4'
+                className='h-3.5 w-3.5 sm:h-4 sm:w-4'
                 fill='none'
                 viewBox='0 0 24 24'
                 stroke='currentColor'
@@ -73,12 +73,12 @@ export default function NewArrivals() {
             <button
               onClick={scrollNext}
               disabled={!canScrollNext}
-              className='flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:border-primary hover:text-primary disabled:opacity-30'
+              className='flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-gray-400 bg-white text-gray-500 transition-colors hover:border-primary hover:text-primary disabled:opacity-30'
               aria-label='Next'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
-                className='h-4 w-4'
+                className='h-3.5 w-3.5 sm:h-4 sm:w-4'
                 fill='none'
                 viewBox='0 0 24 24'
                 stroke='currentColor'
@@ -96,11 +96,11 @@ export default function NewArrivals() {
 
         {/* ── Carousel ── */}
         <div className='overflow-hidden' ref={emblaRef}>
-          <div className='flex items-stretch gap-4 sm:gap-5 md:gap-6'>
+          <div className='flex items-stretch gap-3 sm:gap-5 md:gap-6'>
             {newArrivals.map((product) => (
               <div
                 key={product.id}
-                className='w-[75vw] min-w-0 shrink-0 sm:w-[45vw] md:w-[calc(25%-18px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] 2xl:w-[calc(25%-18px)]'
+                className='w-[62vw] min-w-0 shrink-0 sm:w-[45vw] md:w-[calc(25%-18px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] 2xl:w-[calc(25%-18px)]'
               >
                 <ProductCard product={product} />
               </div>

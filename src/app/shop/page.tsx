@@ -355,10 +355,11 @@ function ShopPageInner() {
 /* ─── List View Row ─── */
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiHeart, FiShoppingCart, FiStar } from 'react-icons/fi';
+import { FiHeart, FiRepeat, FiShoppingCart, FiStar } from 'react-icons/fi';
 import { type Product } from '@/data/products';
 import { useCart } from '@/lib/cart-context';
 import { useWishlist } from '@/lib/wishlist-context';
+import { useCompare } from '@/lib/compare-context';
 
 function ProductListRow({
   product,
@@ -369,7 +370,9 @@ function ProductListRow({
 }) {
   const { addItem, openDrawer } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { isInCompare, addToCompare, removeFromCompare } = useCompare();
   const inWishlist = isInWishlist(product.id);
+  const inCompare = isInCompare(product.id);
   const outOfStock = product.stock === 0;
   const hasDiscount =
     product.discountPrice !== null && product.discountPrice < product.basePrice;
@@ -396,68 +399,77 @@ function ProductListRow({
   };
 
   return (
-    <div className='flex gap-3 rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md sm:gap-4'>
+    <div className='group relative flex gap-2.5 sm:gap-3.5 rounded-xl border border-gray-300 bg-white p-1.5 sm:p-2.5 transition-all duration-300 hover:shadow-md'>
+      {/* Product Image */}
       <Link
-        href={`/product/${product.slug}`}
-        className='relative block aspect-4/3 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100 sm:w-32'
+        href={`/products/${product.slug}`}
+        className='relative block aspect-square w-26 shrink-0 overflow-hidden rounded-lg bg-gray-50 flex items-center justify-center sm:w-32'
       >
-        {/* Blurred background — fills gaps when object-contain leaves space */}
-        <Image
-          src={product.images[0]}
-          alt=''
-          fill
-          sizes='(max-width: 640px) 96px, 128px'
-          className='scale-110 object-cover blur-xl saturate-150'
-          aria-hidden='true'
-        />
         <Image
           src={product.images[0]}
           alt={product.name}
           fill
           sizes='(max-width: 640px) 96px, 128px'
           priority={priority}
-          className='relative z-10 object-contain'
+          className='h-full w-auto transition-transform duration-300 group-hover:scale-105'
         />
         {discountPercent && discountPercent > 0 && (
-          <span className='absolute left-1.5 top-1.5 z-20 rounded-full bg-sale-badge px-2 py-0.5 text-[10px] font-bold text-white'>
+          <span className='absolute left-1.5 top-1.5 z-20 rounded-full bg-sale-badge px-1.5 py-0.5 text-[10px] font-bold text-white shadow-xs'>
             -{discountPercent}%
           </span>
         )}
       </Link>
 
+      {/* Product Info */}
       <div className='flex flex-1 flex-col justify-between min-w-0'>
         <div>
-          <span className='text-[10px] font-medium text-gray-400'>
-            {product.category}
-          </span>
-          <Link href={`/product/${product.slug}`} className='block'>
-            <h3 className='text-sm font-semibold text-gray-800 line-clamp-2 hover:text-primary sm:text-base'>
+          {/* Category & Review Row */}
+          <div className='mb-0.5 flex items-center justify-between gap-1.5'>
+            <span className='text-[10px] font-medium text-gray-400 sm:text-xs truncate'>
+              {product.category}
+            </span>
+
+            {/* Review */}
+            <div className='flex items-center gap-0.5 sm:gap-1 shrink-0'>
+              <FiStar className='h-3 w-3 sm:h-3.5 sm:w-3.5 fill-amber-400 text-amber-400' />
+              <span className='text-[10px] font-semibold text-gray-700 sm:text-xs'>
+                {product.rating > 0 ? product.rating.toFixed(1) : '5.0'}
+              </span>
+              <span className='text-[9px] text-gray-400 sm:text-[10px]'>
+                ({product.reviewCount})
+              </span>
+            </div>
+          </div>
+
+          {/* Name */}
+          <Link href={`/products/${product.slug}`} className='block'>
+            <h3 className='text-[13px] font-semibold text-gray-800 line-clamp-2 hover:text-primary sm:text-base leading-snug'>
               {product.name}
             </h3>
           </Link>
-          <div className='mt-1 flex items-center gap-1'>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <FiStar
-                key={star}
-                className={`h-3 w-3 ${
-                  star <= Math.round(product.rating)
-                    ? 'fill-amber-400 text-amber-400'
-                    : 'text-gray-200'
-                }`}
-              />
-            ))}
-            <span className='text-[11px] text-gray-400'>
-              ({product.reviewCount})
+
+          {/* Stock Quantity */}
+          <div className='mt-1 flex items-center gap-1 text-[11px] sm:text-xs text-gray-400 font-medium'>
+            <span>Stock:</span>
+            <span
+              className={`font-semibold ${
+                outOfStock ? 'text-red-500' : 'text-green-600'
+              }`}
+            >
+              {product.stock}
             </span>
           </div>
+
+          {/* Description */}
           <p className='mt-1 hidden text-xs text-gray-500 line-clamp-2 sm:block'>
             {product.shortDescription}
           </p>
         </div>
 
-        <div className='mt-2 flex flex-wrap items-center justify-between gap-2'>
-          <div className='flex items-baseline gap-2'>
-            <span className='text-base font-semibold text-gray-900 sm:text-lg'>
+        {/* Price & Actions Row */}
+        <div className='mt-2 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gray-100'>
+          <div className='flex items-baseline gap-1.5'>
+            <span className='text-sm font-bold text-gray-900 sm:text-base'>
               ৳{currentPrice.toLocaleString()}
             </span>
             {hasDiscount && (
@@ -466,8 +478,11 @@ function ProductListRow({
               </span>
             )}
           </div>
-          <div className='flex items-center gap-1.5'>
+
+          <div className='flex items-center gap-1 sm:gap-1.5'>
+            {/* Wishlist Button */}
             <button
+              type='button'
               onClick={(e) => {
                 e.preventDefault();
                 toggleWishlist(product.id);
@@ -475,21 +490,51 @@ function ProductListRow({
               aria-label={
                 inWishlist ? 'Remove from wishlist' : 'Add to wishlist'
               }
-              className={`rounded-lg p-1.5 transition-colors hover:text-red-500 ${
-                inWishlist ? 'text-red-500' : 'text-gray-400'
+              title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+              className={`rounded-lg p-1.5 transition-all duration-200 active:scale-95 ${
+                inWishlist
+                  ? 'bg-red-50 text-red-500'
+                  : 'text-gray-400 hover:bg-gray-100 hover:text-red-500'
               }`}
             >
               <FiHeart
                 className={`h-4 w-4 ${inWishlist ? 'fill-red-500' : ''}`}
               />
             </button>
+
+            {/* Compare Button */}
             <button
+              type='button'
+              onClick={(e) => {
+                e.preventDefault();
+                if (inCompare) {
+                  removeFromCompare(product.id);
+                } else {
+                  addToCompare(product.id);
+                }
+              }}
+              aria-label={
+                inCompare ? 'Remove from compare' : 'Add to compare'
+              }
+              title={inCompare ? 'Remove from compare' : 'Add to compare'}
+              className={`rounded-lg p-1.5 transition-all duration-200 active:scale-95 ${
+                inCompare
+                  ? 'bg-primary-light text-primary'
+                  : 'text-gray-400 hover:bg-gray-100 hover:text-primary'
+              }`}
+            >
+              <FiRepeat className='h-4 w-4' />
+            </button>
+
+            {/* Add to Cart Button */}
+            <button
+              type='button'
               onClick={handleAddToCart}
               disabled={outOfStock}
-              className='flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50'
+              className='flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 sm:px-4 sm:py-2 text-xs font-semibold text-white shadow-xs transition-all duration-200 hover:bg-primary-dark hover:shadow active:scale-95 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400'
             >
               <FiShoppingCart className='h-3.5 w-3.5' />
-              Add to Cart
+              <span>Add to Cart</span>
             </button>
           </div>
         </div>

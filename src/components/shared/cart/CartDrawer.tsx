@@ -241,22 +241,22 @@ export default function CartDrawer() {
 
         {/* ── Footer: Summary + Buttons ── */}
         {items.length > 0 && (
-          <div className='border-t border-gray-200 bg-gray-50 px-5 py-4'>
+          <div className=' border-t border-gray-200 px-5 py-4'>
             <div className='space-y-2 text-sm'>
-              <div className='flex items-center justify-between'>
+              {/* <div className='flex items-center justify-between'>
                 <span className='text-gray-500'>Subtotal</span>
                 <span className='font-medium text-gray-900'>
                   ৳{subtotal.toLocaleString()}
                 </span>
-              </div>
-              <div className='flex items-center justify-between'>
+              </div> */}
+              {/* <div className='flex items-center justify-between'>
                 <span className='text-gray-500'>Shipping</span>
                 <span className='font-medium text-gray-900'>
                   Calculated at checkout
                 </span>
-              </div>
-              <div className='flex items-center justify-between border-t border-gray-200 pt-2 text-base'>
-                <span className='font-semibold text-gray-900'>Total</span>
+              </div> */}
+              <div className='flex items-center justify-between text-base md:text-lg'>
+                <span className='font-semibold text-gray-900'>Subtotal</span>
                 <span className='font-bold text-primary'>
                   ৳{subtotal.toLocaleString()}
                 </span>

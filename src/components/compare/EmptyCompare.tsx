@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { FiColumns } from 'react-icons/fi';
+import { FiRepeat } from 'react-icons/fi';
 
 export default function EmptyCompare() {
   return (
     <div className='flex flex-col items-center justify-center py-20 text-center'>
       <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-light'>
-        <FiColumns className='h-8 w-8 text-primary' />
+        <FiRepeat className='h-8 w-8 text-primary' />
       </div>
       <h2 className='font-heading text-lg font-semibold text-gray-900'>
         Nothing to compare yet

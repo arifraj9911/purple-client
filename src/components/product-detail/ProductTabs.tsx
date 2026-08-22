@@ -96,31 +96,31 @@ export default function ProductTabs({ product }: ProductTabsProps) {
 /* ─── Description (rich-text blocks) ─── */
 function DescriptionContent({ blocks }: { blocks: DescriptionBlock[] }) {
   if (blocks.length === 0) {
-    return <p className='text-base text-gray-500'>No description available.</p>;
+    return <p className='text-sm text-gray-500 sm:text-base'>No description available.</p>;
   }
 
   return (
-    <div className='space-y-4'>
+    <div className='space-y-3 sm:space-y-4'>
       {blocks.map((block, index) => {
         switch (block.type) {
           case 'heading':
             return (
               <h3
                 key={index}
-                className='font-heading text-lg font-semibold text-gray-900'
+                className='font-heading text-base font-semibold text-gray-900 sm:text-lg'
               >
                 {block.text}
               </h3>
             );
           case 'list':
             return (
-              <ul key={index} className='space-y-2'>
+              <ul key={index} className='space-y-1.5 sm:space-y-2'>
                 {block.items.map((item, itemIndex) => (
                   <li
                     key={itemIndex}
-                    className='flex items-start gap-2 text-base leading-relaxed text-gray-600'
+                    className='flex items-start gap-2 text-sm leading-relaxed text-gray-600 sm:text-base'
                   >
-                    <FiCheck className='mt-1 h-4 w-4 shrink-0 text-primary' />
+                    <FiCheck className='mt-0.5 sm:mt-1 h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-primary' />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -130,7 +130,7 @@ function DescriptionContent({ blocks }: { blocks: DescriptionBlock[] }) {
             return (
               <p
                 key={index}
-                className='text-base leading-relaxed text-gray-600'
+                className='text-sm leading-relaxed text-gray-600 sm:text-base'
               >
                 {block.text}
               </p>
@@ -169,17 +169,17 @@ function InfoTable({ product }: { product: Product }) {
 
   return (
     <div className='overflow-hidden rounded-xl border border-gray-200'>
-      <table className='w-full text-left text-base'>
+      <table className='w-full text-left text-xs sm:text-sm'>
         <tbody>
           {rows.map((row, index) => (
             <tr
               key={row.label}
               className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
             >
-              <th className='w-40 px-4 py-3 font-medium text-gray-500'>
+              <th className='w-28 sm:w-40 px-3 sm:px-4 py-2 sm:py-3 font-medium text-gray-500'>
                 {row.label}
               </th>
-              <td className='px-4 py-3 text-gray-800'>{row.value}</td>
+              <td className='px-3 sm:px-4 py-2 sm:py-3 text-gray-800'>{row.value}</td>
             </tr>
           ))}
         </tbody>
@@ -219,16 +219,16 @@ function ReviewsPanel({ product }: { product: Product }) {
   return (
     <div>
       {/* Summary */}
-      <div className='flex flex-wrap items-center gap-6 rounded-xl border border-gray-100 bg-gray-50 p-5'>
+      <div className='flex flex-wrap items-center gap-4 sm:gap-6 rounded-xl border border-gray-100 bg-gray-50 p-4 sm:p-5'>
         <div className='text-center'>
-          <div className='text-4xl font-bold text-gray-900'>
+          <div className='text-3xl sm:text-4xl font-bold text-gray-900'>
             {product.rating}
           </div>
           <div className='mt-1 flex items-center justify-center gap-0.5'>
             {[1, 2, 3, 4, 5].map((star) => (
               <FiStar
                 key={star}
-                className={`h-3.5 w-3.5 ${
+                className={`h-3 w-3 sm:h-3.5 sm:w-3.5 ${
                   star <= Math.round(product.rating)
                     ? 'fill-amber-400 text-amber-400'
                     : 'text-gray-200'
@@ -236,14 +236,14 @@ function ReviewsPanel({ product }: { product: Product }) {
               />
             ))}
           </div>
-          <div className='mt-1 text-xs text-gray-500'>
+          <div className='mt-1 text-[11px] sm:text-xs text-gray-500'>
             Based on {product.reviewCount + newReviews.length} reviews
           </div>
         </div>
 
         {reviews.length > 0 && (
-          <p className='flex items-center gap-2 text-sm text-gray-600'>
-            <FiMessageSquare className='h-4 w-4 text-primary' />
+          <p className='flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-600'>
+            <FiMessageSquare className='h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary' />
             Showing {reviews.length} of{' '}
             {product.reviewCount + newReviews.length} reviews
           </p>
@@ -252,29 +252,29 @@ function ReviewsPanel({ product }: { product: Product }) {
 
       {/* Review list */}
       {reviews.length === 0 ? (
-        <div className='mt-6 rounded-xl border border-dashed border-gray-200 p-10 text-center'>
-          <p className='text-sm font-medium text-gray-700'>No reviews yet</p>
-          <p className='mt-1 text-xs text-gray-500'>
+        <div className='mt-5 sm:mt-6 rounded-xl border border-dashed border-gray-200 p-6 sm:p-10 text-center'>
+          <p className='text-xs sm:text-sm font-medium text-gray-700'>No reviews yet</p>
+          <p className='mt-1 text-[11px] sm:text-xs text-gray-500'>
             Be the first to share your experience with this product.
           </p>
         </div>
       ) : (
-        <ul className='mt-6 space-y-5'>
+        <ul className='mt-5 sm:mt-6 space-y-3.5 sm:space-y-5'>
           {reviews.map((review) => (
             <li
               key={review.id}
-              className='rounded-xl border border-gray-100 p-5'
+              className='rounded-xl border border-gray-100 p-3.5 sm:p-5'
             >
               <div className='flex flex-wrap items-center justify-between gap-2'>
                 <div className='flex items-center gap-2'>
-                  <span className='flex h-9 w-9 items-center justify-center rounded-full bg-primary-light text-primary'>
-                    <FiUser className='h-4 w-4' />
+                  <span className='flex h-7 w-7 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-primary-light text-primary'>
+                    <FiUser className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
                   </span>
-                  <span className='text-sm font-semibold text-gray-900'>
+                  <span className='text-xs sm:text-sm font-semibold text-gray-900'>
                     {review.userName}
                   </span>
                 </div>
-                <span className='text-xs text-gray-400'>
+                <span className='text-[10px] sm:text-xs text-gray-400'>
                   {new Date(review.createdAt).toLocaleDateString('en-GB', {
                     day: 'numeric',
                     month: 'short',
@@ -282,11 +282,11 @@ function ReviewsPanel({ product }: { product: Product }) {
                   })}
                 </span>
               </div>
-              <div className='mt-2 flex items-center gap-0.5'>
+              <div className='mt-1.5 sm:mt-2 flex items-center gap-0.5'>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <FiStar
                     key={star}
-                    className={`h-3.5 w-3.5 ${
+                    className={`h-3 w-3 sm:h-3.5 sm:w-3.5 ${
                       star <= review.rating
                         ? 'fill-amber-400 text-amber-400'
                         : 'text-gray-200'
@@ -294,7 +294,7 @@ function ReviewsPanel({ product }: { product: Product }) {
                   />
                 ))}
               </div>
-              <p className='mt-2 text-base leading-relaxed text-gray-600'>
+              <p className='mt-2 text-xs sm:text-sm leading-relaxed text-gray-600'>
                 {review.comment}
               </p>
             </li>
@@ -305,15 +305,15 @@ function ReviewsPanel({ product }: { product: Product }) {
       {/* ── Review form ── */}
       <form
         onSubmit={handleSubmit}
-        className='mt-8 rounded-xl border border-gray-100 bg-gray-50 p-5'
+        className='mt-6 sm:mt-8 rounded-xl border border-gray-100 bg-gray-50 p-4 sm:p-5'
       >
-        <h3 className='font-heading text-lg font-semibold text-gray-900'>
+        <h3 className='font-heading text-base font-semibold text-gray-900 sm:text-lg'>
           Write a Review
         </h3>
 
         {/* Star rating picker */}
-        <div className='mt-3 flex items-center gap-2'>
-          <span className='text-sm text-gray-600'>Your rating:</span>
+        <div className='mt-2.5 sm:mt-3 flex items-center gap-2'>
+          <span className='text-xs sm:text-sm text-gray-600'>Your rating:</span>
           <div className='flex items-center gap-1'>
             {[1, 2, 3, 4, 5].map((star) => (
               <button
@@ -324,7 +324,7 @@ function ReviewsPanel({ product }: { product: Product }) {
                 className='transition-transform hover:scale-110'
               >
                 <FiStar
-                  className={`h-6 w-6 transition-colors ${
+                  className={`h-5 w-5 sm:h-6 sm:w-6 transition-colors ${
                     star <= rating
                       ? 'fill-amber-400 text-amber-400'
                       : 'text-gray-300 hover:text-amber-300'
@@ -336,10 +336,10 @@ function ReviewsPanel({ product }: { product: Product }) {
         </div>
 
         {/* Name (optional) */}
-        <div className='mt-4'>
+        <div className='mt-3.5 sm:mt-4'>
           <label
             htmlFor='review-name'
-            className='mb-1 block text-sm font-medium text-gray-700'
+            className='mb-1 block text-xs sm:text-sm font-medium text-gray-700'
           >
             Name <span className='font-normal text-gray-400'>(optional)</span>
           </label>
@@ -349,15 +349,15 @@ function ReviewsPanel({ product }: { product: Product }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder='Your name'
-            className='w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
+            className='w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs sm:text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
           />
         </div>
 
         {/* Comment */}
-        <div className='mt-4'>
+        <div className='mt-3.5 sm:mt-4'>
           <label
             htmlFor='review-comment'
-            className='mb-1 block text-sm font-medium text-gray-700'
+            className='mb-1 block text-xs sm:text-sm font-medium text-gray-700'
           >
             Your Review <span className='text-primary'>*</span>
           </label>
@@ -365,18 +365,18 @@ function ReviewsPanel({ product }: { product: Product }) {
             id='review-comment'
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            rows={4}
+            rows={3}
             placeholder='Share your experience with this product...'
-            className='w-full resize-y rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
+            className='w-full resize-y rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs sm:text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
           />
         </div>
 
         <button
           type='submit'
           disabled={!comment.trim()}
-          className='mt-4 flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400'
+          className='mt-3.5 sm:mt-4 flex items-center gap-1.5 sm:gap-2 rounded-lg bg-primary px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400'
         >
-          <FiSend className='h-4 w-4' />
+          <FiSend className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
           Submit Review
         </button>
 
@@ -401,19 +401,19 @@ function ShippingInfoPanel() {
   ];
 
   return (
-    <div className='space-y-4'>
-      <p className='text-base leading-relaxed text-gray-600'>
+    <div className='space-y-3 sm:space-y-4'>
+      <p className='text-sm sm:text-base leading-relaxed text-gray-600'>
         We deliver to all 64 districts of Bangladesh through trusted courier
         partners. Orders placed before 3 PM are dispatched the same day, and you
         will receive a tracking number as soon as your parcel ships.
       </p>
-      <ul className='space-y-2'>
+      <ul className='space-y-1.5 sm:space-y-2'>
         {items.map((item) => (
           <li
             key={item}
-            className='flex items-start gap-2 text-base leading-relaxed text-gray-600'
+            className='flex items-start gap-2 text-sm sm:text-base leading-relaxed text-gray-600'
           >
-            <FiTruck className='mt-1 h-4 w-4 shrink-0 text-primary' />
+            <FiTruck className='mt-0.5 sm:mt-1 h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-primary' />
             <span>{item}</span>
           </li>
         ))}
@@ -432,18 +432,18 @@ function ReturnPolicyPanel() {
   ];
 
   return (
-    <div className='space-y-4'>
-      <p className='text-base leading-relaxed text-gray-600'>
+    <div className='space-y-3 sm:space-y-4'>
+      <p className='text-sm sm:text-base leading-relaxed text-gray-600'>
         Not happy with your purchase? No worries — we offer a simple,
         hassle-free return process so you can shop with confidence.
       </p>
-      <ul className='space-y-2'>
+      <ul className='space-y-1.5 sm:space-y-2'>
         {items.map((item) => (
           <li
             key={item}
-            className='flex items-start gap-2 text-base leading-relaxed text-gray-600'
+            className='flex items-start gap-2 text-sm sm:text-base leading-relaxed text-gray-600'
           >
-            <FiRefreshCw className='mt-1 h-4 w-4 shrink-0 text-primary' />
+            <FiRefreshCw className='mt-0.5 sm:mt-1 h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 text-primary' />
             <span>{item}</span>
           </li>
         ))}
