@@ -30,11 +30,11 @@ export default function MobileBottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-0.5 py-2 px-3 min-w-0 transition-colors ${
+              className={`flex flex-col items-center gap-0.5 pb-1 pt-1.5 px-3 min-w-0 transition-colors ${
                 isActive ? 'text-primary' : 'text-gray-500 hover:text-primary'
               }`}
             >
-              <Icon className='h-5 w-5' />
+              <Icon className='h-4 w-4' />
               <span className='text-[10px] font-medium whitespace-nowrap'>
                 {item.label}
               </span>

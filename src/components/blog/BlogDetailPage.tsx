@@ -27,28 +27,19 @@ export default function BlogDetailPage({ post, recent }: BlogDetailPageProps) {
       </div>
 
       {/* ── Article body + sticky recent posts sidebar ── */}
-      <div className='container mx-auto px-4 py-10 md:px-6 lg:px-8'>
+      <div className='container mx-auto px-4 py-6 md:py-8 md:px-6 lg:px-8'>
         <div className='grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_320px]'>
           {/* Left column — article */}
           <article className='min-w-0'>
             {/* Featured image — only inside the left (article) column */}
-            <div className='relative h-48 w-full overflow-hidden rounded-2xl bg-gray-100 sm:h-64 lg:h-100'>
-              {/* Blurred background fills the letterboxed sides */}
-              <Image
-                src={post.image}
-                alt=''
-                fill
-                sizes='(max-width: 1024px) 100vw, 800px'
-                className='absolute inset-0 h-full w-full scale-110 object-cover blur-xl saturate-150'
-                aria-hidden='true'
-              />
+            <div className='relative h-64 w-full overflow-hidden rounded-2xl bg-gray-100 sm:h-64 lg:h-140'>
               <Image
                 src={post.image}
                 alt={post.title}
                 fill
                 priority
                 sizes='(max-width: 1024px) 100vw, 800px'
-                className='relative z-10 h-full w-full object-contain'
+                className='relative z-10'
               />
             </div>
 
@@ -98,8 +89,8 @@ export default function BlogDetailPage({ post, recent }: BlogDetailPageProps) {
 
           {/* Right column — sticky recent posts */}
           {recent.length > 0 && (
-            <aside className='lg:sticky lg:top-32 lg:self-start lg:h-fit'>
-              <h2 className='mb-5 font-heading text-xl font-bold text-gray-900'>
+            <aside className='lg:sticky lg:top-34 lg:self-start lg:h-fit'>
+              <h2 className='mb-3 font-heading text-xl font-bold text-gray-900'>
                 Recent Posts
               </h2>
               <div className='space-y-4'>
@@ -107,7 +98,7 @@ export default function BlogDetailPage({ post, recent }: BlogDetailPageProps) {
                   <Link
                     key={rp.id}
                     href={`/blog/${rp.slug}`}
-                    className='group flex gap-3 rounded-xl border border-gray-100 bg-white p-3 transition-all hover:border-primary/30 hover:shadow-sm'
+                    className='group flex gap-3 rounded-xl border border-gray-300 bg-white p-2.5 transition-all hover:border-primary/30 hover:shadow-sm'
                   >
                     <div className='relative h-20 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100'>
                       <Image

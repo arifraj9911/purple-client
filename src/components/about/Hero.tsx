@@ -10,11 +10,10 @@ export default function Hero() {
         fill
         priority
         sizes='100vw'
-        className='object-cover'
       />
       <div className='absolute inset-0 bg-secondary/70' />
 
-      <div className='relative mx-auto max-w-3xl px-4 py-20 text-center text-white sm:py-24 lg:py-28'>
+      <div className='relative mx-auto max-w-3xl px-4 py-20 text-center text-white sm:py-24 lg:py-32'>
         <p className='text-xs font-semibold uppercase tracking-widest text-primary-light sm:text-sm'>
           {hero.eyebrow}
         </p>

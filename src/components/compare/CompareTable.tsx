@@ -70,35 +70,26 @@ export default function CompareTable({ products }: CompareTableProps) {
                 className='min-w-55 p-3 align-top'
               >
                 {product ? (
-                  <div className='relative'>
+                  <div className='group relative'>
                     <button
                       type='button'
                       onClick={() => removeFromCompare(product.id)}
                       aria-label={`Remove ${product.name} from compare`}
-                      className='absolute -right-1 -top-1 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-500'
+                      className='absolute -right-1.5 -top-1.5 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white text-gray-400 shadow-xs transition-all hover:border-red-200 hover:bg-red-50 hover:text-red-500 active:scale-90'
                     >
                       <FiX className='h-3.5 w-3.5' />
                     </button>
-                    <Link href={`/product/${product.slug}`} className='block'>
-                      <div className='relative mb-2 aspect-4/3 w-full overflow-hidden rounded-lg bg-gray-100'>
-                        {/* Blurred background image — fills the side gaps left by object-contain */}
-                        <Image
-                          src={product.images[0]}
-                          alt=''
-                          width={600}
-                          height={600}
-                          className='absolute inset-0 h-full w-full scale-110 object-cover blur-xl saturate-150'
-                          aria-hidden='true'
-                        />
+                    <Link href={`/products/${product.slug}`} className='block'>
+                      <div className='relative mb-2 h-[180px] sm:h-[260px] w-full overflow-hidden rounded-lg bg-gray-50 flex items-center justify-center'>
                         <Image
                           src={product.images[0]}
                           alt={product.name}
-                          width={600}
-                          height={600}
-                          className='relative z-10 h-full w-full object-contain'
+                          fill
+                          sizes='(max-width: 640px) 50vw, 25vw'
+                          className='h-full w-auto transition-transform duration-500 group-hover:scale-105'
                         />
                       </div>
-                      <span className='block text-sm font-semibold leading-snug text-gray-900 line-clamp-2 hover:text-primary'>
+                      <span className='block text-sm font-semibold leading-snug text-gray-900 line-clamp-2 transition-colors group-hover:text-primary'>
                         {product.name}
                       </span>
                     </Link>

@@ -90,7 +90,7 @@ export default function SearchBar({
           }}
           onFocus={() => setIsOpen(true)}
           placeholder={placeholder}
-          className={`w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-primary focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary ${
+          className={`w-full rounded-lg border border-gray-300 bg-gray-50 pl-10 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-primary focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary ${
             showSubmitButton ? 'pr-20' : 'pr-3'
           } ${inputClassName}`}
         />

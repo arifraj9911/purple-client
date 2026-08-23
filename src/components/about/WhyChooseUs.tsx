@@ -10,13 +10,12 @@ export default function WhyChooseUs() {
     <section className='bg-white py-12 lg:py-16'>
       <div className='container mx-auto px-4 md:px-6 lg:px-8'>
         <div className='grid items-center gap-8 lg:grid-cols-2 lg:gap-12'>
-          <div className='relative aspect-4/3 overflow-hidden rounded-2xl'>
+          <div className='relative h-64 w-full overflow-hidden rounded-2xl sm:h-80 lg:h-[25rem]'>
             <Image
               src={whyChooseUs.image}
               alt='Why choose Purple BD'
               fill
               sizes='(max-width: 1024px) 100vw, 50vw'
-              className='object-cover'
             />
           </div>
 

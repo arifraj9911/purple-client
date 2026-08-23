@@ -43,7 +43,7 @@ const baseField =
   'w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary';
 
 const fieldClass = (hasError: boolean) =>
-  `${baseField} ${hasError ? 'border-red-400' : 'border-gray-200'}`;
+  `${baseField} ${hasError ? 'border-red-400' : 'border-gray-300'}`;
 
 export default function ShippingAddressForm({
   values,

@@ -223,7 +223,7 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
       {/* ── Quantity + actions (compact, aligned row) ── */}
       <div className='mt-3 flex flex-wrap items-center gap-2'>
         {/* Quantity Stepper (compact) */}
-        <div className='flex items-center rounded-lg border border-gray-200'>
+        <div className='flex items-center rounded-lg border border-gray-300'>
           <button
             type='button'
             onClick={() => changeQuantity(-1)}
@@ -240,7 +240,7 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
             onChange={(e) => handleQuantityInput(e.target.value)}
             onBlur={commitQuantity}
             aria-label='Quantity'
-            className='h-9 w-11 border-x border-gray-200 bg-white text-center text-xs font-semibold text-gray-900 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary'
+            className='h-9 w-11 border-x border-gray-300 bg-white text-center text-xs font-semibold text-gray-900 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary'
           />
           <button
             type='button'
@@ -263,7 +263,7 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
           className={`flex h-9 w-9 items-center justify-center rounded-lg border transition-all duration-200 active:scale-95 ${
             wishlisted
               ? 'border-red-200 bg-red-50 text-red-500'
-              : 'border-gray-200 text-gray-500 hover:border-red-200 hover:bg-red-50 hover:text-red-500'
+              : 'border-gray-300 text-gray-500 hover:border-red-200 hover:bg-red-50 hover:text-red-500'
           }`}
         >
           <FiHeart className={`h-4 w-4 ${wishlisted ? 'fill-red-500' : ''}`} />
@@ -279,7 +279,7 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
           className={`flex h-9 w-9 items-center justify-center rounded-lg border transition-all duration-200 active:scale-95 ${
             compared
               ? 'border-primary bg-primary-light text-primary'
-              : 'border-gray-200 text-gray-500 hover:border-primary hover:bg-primary-light hover:text-primary'
+              : 'border-gray-300 text-gray-500 hover:border-primary hover:bg-primary-light hover:text-primary'
           }`}
         >
           <FiRepeat className='h-4 w-4' />
@@ -301,7 +301,7 @@ export default function ProductPurchase({ product }: ProductPurchaseProps) {
             type='button'
             onClick={buyNow}
             disabled={outOfStock}
-            className='flex h-9 flex-1 sm:flex-initial sm:px-4 items-center justify-center gap-1.5 rounded-lg border border-primary bg-transparent px-3 text-xs font-semibold text-primary transition-all duration-200 hover:bg-primary hover:text-white active:scale-95 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-transparent disabled:text-gray-400'
+            className='flex h-9 flex-1 sm:flex-initial sm:px-4 items-center justify-center gap-1.5 rounded-lg border border-primary bg-transparent px-3 text-xs font-semibold text-primary transition-all duration-200 hover:bg-primary hover:text-white active:scale-95 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-transparent disabled:text-gray-400'
           >
             <FiZap className='h-3.5 w-3.5' />
             <span>Buy Now</span>

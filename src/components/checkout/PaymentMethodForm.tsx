@@ -39,7 +39,7 @@ export default function PaymentMethodForm({
             className={`flex cursor-pointer items-center rounded-lg border p-3.5 transition-colors ${
               active
                 ? 'border-primary bg-primary-light/40'
-                : 'border-gray-200 hover:border-gray-300'
+                : 'border-gray-300 hover:border-gray-300'
             }`}
           >
             <input

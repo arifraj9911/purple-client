@@ -22,7 +22,7 @@ export default function OrderSummary({
 }: OrderSummaryProps) {
   return (
     <aside className='w-full shrink-0 lg:w-96 lg:sticky lg:top-28 lg:self-start'>
-      <div className='rounded-xl border border-gray-200 bg-white p-5'>
+      <div className='rounded-xl border border-gray-300 bg-white p-5'>
         <h2 className='font-heading text-lg font-semibold text-gray-900'>
           Order Summary
         </h2>
@@ -94,7 +94,7 @@ export default function OrderSummary({
         </button>
         <Link
           href='/cart'
-          className='mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:border-primary hover:text-primary'
+          className='mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:border-primary hover:text-primary'
         >
           <FiChevronLeft className='h-4 w-4' />
           Back to Cart

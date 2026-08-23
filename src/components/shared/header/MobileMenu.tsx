@@ -23,7 +23,6 @@ const NAV_LINKS = [
   { label: 'Blog', href: '/blog' },
   { label: 'About Us', href: '/about' },
   { label: 'Contact Us', href: '/contact' },
-  { label: 'Offers', href: '/offers' },
 ] as const;
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {

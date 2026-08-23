@@ -38,7 +38,7 @@ export default function ProductTabs({ product }: ProductTabsProps) {
       <div
         role='tablist'
         aria-label='Product information'
-        className='flex flex-wrap justify-center gap-1 border-b border-gray-200'
+        className='flex flex-wrap justify-center gap-1 border-b border-gray-300'
       >
         {tabs.map((tab) => (
           <button
@@ -168,7 +168,7 @@ function InfoTable({ product }: { product: Product }) {
   ];
 
   return (
-    <div className='overflow-hidden rounded-xl border border-gray-200'>
+    <div className='overflow-hidden rounded-xl border border-gray-300'>
       <table className='w-full text-left text-xs sm:text-sm'>
         <tbody>
           {rows.map((row, index) => (
@@ -252,7 +252,7 @@ function ReviewsPanel({ product }: { product: Product }) {
 
       {/* Review list */}
       {reviews.length === 0 ? (
-        <div className='mt-5 sm:mt-6 rounded-xl border border-dashed border-gray-200 p-6 sm:p-10 text-center'>
+        <div className='mt-5 sm:mt-6 rounded-xl border border-dashed border-gray-300 p-6 sm:p-10 text-center'>
           <p className='text-xs sm:text-sm font-medium text-gray-700'>No reviews yet</p>
           <p className='mt-1 text-[11px] sm:text-xs text-gray-500'>
             Be the first to share your experience with this product.
@@ -349,7 +349,7 @@ function ReviewsPanel({ product }: { product: Product }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder='Your name'
-            className='w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs sm:text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
+            className='w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs sm:text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
           />
         </div>
 
@@ -367,7 +367,7 @@ function ReviewsPanel({ product }: { product: Product }) {
             onChange={(e) => setComment(e.target.value)}
             rows={3}
             placeholder='Share your experience with this product...'
-            className='w-full resize-y rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs sm:text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
+            className='w-full resize-y rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs sm:text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
           />
         </div>
 

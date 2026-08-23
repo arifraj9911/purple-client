@@ -4,7 +4,7 @@ export default function MapEmbed() {
   return (
     <section
       aria-label='Our location'
-      className='mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white p-2'
+      className='mt-6 overflow-hidden rounded-2xl border border-gray-300 bg-white p-2'
     >
       <iframe
         src={mapEmbedUrl}

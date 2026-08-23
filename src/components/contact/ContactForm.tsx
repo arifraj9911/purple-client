@@ -49,12 +49,12 @@ export default function ContactForm() {
 
   const fieldClass = (hasError?: string) =>
     `w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary ${
-      hasError ? 'border-red-400' : 'border-gray-200'
+      hasError ? 'border-red-400' : 'border-gray-300'
     }`;
 
   if (sent) {
     return (
-      <div className='flex h-full flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white p-10 text-center'>
+      <div className='flex h-full flex-col items-center justify-center rounded-2xl border border-gray-300 bg-white p-10 text-center'>
         <div className='mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-accent/10'>
           <FiCheck className='h-7 w-7 text-accent' />
         </div>
@@ -78,7 +78,7 @@ export default function ContactForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className='space-y-4 rounded-2xl border border-gray-200 bg-white p-5 sm:p-6'
+      className='space-y-4 rounded-2xl border border-gray-300 bg-white p-5 sm:p-6'
     >
       <h2 className='font-heading text-lg font-semibold text-gray-900'>
         Send Us a Message

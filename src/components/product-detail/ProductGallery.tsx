@@ -79,7 +79,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
       className={`relative aspect-square w-16 shrink-0 overflow-hidden rounded-md border-2 transition-all duration-300 sm:w-20 ${
         index === selectedIndex
           ? 'border-primary opacity-100'
-          : 'border-gray-200 opacity-70 hover:border-gray-300 hover:opacity-100'
+          : 'border-gray-300 opacity-70 hover:border-gray-300 hover:opacity-100'
       }`}
     >
       <Image src={src} alt='' fill sizes='96px' className='object-cover' />
@@ -92,7 +92,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
       <div className='group relative min-w-0 flex-1 lg:order-2'>
         <div
           ref={mainRef}
-          className='overflow-hidden rounded-md border border-gray-200 bg-gray-50'
+          className='overflow-hidden rounded-md border border-gray-300 bg-gray-50'
         >
           <div className='flex'>
             {slides.map((src, index) => (
@@ -121,7 +121,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
               onClick={scrollPrev}
               disabled={!canScrollPrev}
               aria-label='Previous image'
-              className='absolute left-3 top-1/2 z-20 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 text-gray-700 shadow-sm backdrop-blur transition-all duration-300 hover:border-primary hover:text-primary disabled:pointer-events-none disabled:hidden sm:h-8 sm:w-8 sm:opacity-0 sm:group-hover:opacity-100 lg:h-10 lg:w-10'
+              className='absolute left-3 top-1/2 z-20 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-gray-300 bg-white/90 text-gray-700 shadow-sm backdrop-blur transition-all duration-300 hover:border-primary hover:text-primary disabled:pointer-events-none disabled:hidden sm:h-8 sm:w-8 sm:opacity-0 sm:group-hover:opacity-100 lg:h-10 lg:w-10'
             >
               <FiChevronLeft className='h-5 w-5' />
             </button>
@@ -130,7 +130,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
               onClick={scrollNext}
               disabled={!canScrollNext}
               aria-label='Next image'
-              className='absolute right-3 top-1/2 z-20 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 text-gray-700 shadow-sm backdrop-blur transition-all duration-300 hover:border-primary hover:text-primary disabled:pointer-events-none disabled:hidden sm:h-8 sm:w-8 sm:opacity-0 sm:group-hover:opacity-100 lg:h-10 lg:w-10'
+              className='absolute right-3 top-1/2 z-20 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-gray-300 bg-white/90 text-gray-700 shadow-sm backdrop-blur transition-all duration-300 hover:border-primary hover:text-primary disabled:pointer-events-none disabled:hidden sm:h-8 sm:w-8 sm:opacity-0 sm:group-hover:opacity-100 lg:h-10 lg:w-10'
             >
               <FiChevronRight className='h-5 w-5' />
             </button>
@@ -142,7 +142,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
           type='button'
           onClick={() => setIsZoomed(true)}
           aria-label='Zoom image'
-          className='absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white/90 text-gray-700 shadow-sm backdrop-blur transition-all duration-300 hover:border-primary hover:text-primary'
+          className='absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 bg-white/90 text-gray-700 shadow-sm backdrop-blur transition-all duration-300 hover:border-primary hover:text-primary'
         >
           <FiMaximize2 className='h-4 w-4' />
         </button>

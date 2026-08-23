@@ -24,7 +24,7 @@ export default function BlogPage() {
       </div>
 
       <div className='container mx-auto px-4 py-6 pb-12 md:px-6 lg:px-8'>
-        <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'>
+        <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4'>
           {paginatedPosts.map((post, index) => (
             <BlogCard
               key={post.id}

@@ -12,7 +12,7 @@ const SOCIAL_ICONS: Record<string, IconType> = {
 
 export default function ContactInfo() {
   return (
-    <div className='rounded-2xl border border-gray-200 bg-white p-5 sm:p-6'>
+    <div className='rounded-2xl border border-gray-300 bg-white p-5 sm:p-6'>
       <h2 className='font-heading text-lg font-semibold text-gray-900'>
         Get in Touch
       </h2>

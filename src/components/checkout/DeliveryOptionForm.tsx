@@ -26,7 +26,7 @@ export default function DeliveryOptionForm({
             className={`flex cursor-pointer items-center justify-between rounded-lg border p-3.5 transition-colors ${
               active
                 ? 'border-primary bg-primary-light/40'
-                : 'border-gray-200 hover:border-gray-300'
+                : 'border-gray-300 hover:border-gray-300'
             }`}
           >
             <span className='flex items-center gap-2.5'>

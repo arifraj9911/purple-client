@@ -61,7 +61,7 @@ export default function CartDrawer() {
         aria-label='Shopping cart'
       >
         {/* ── Header ── */}
-        <div className='flex items-center justify-between border-b border-gray-200 px-5 py-4'>
+        <div className='flex items-center justify-between border-b border-gray-300 px-5 py-4'>
           <div className='flex items-center gap-2'>
             <FiShoppingBag className='h-5 w-5 text-primary' />
             <h2 className='text-lg font-heading font-semibold text-gray-900'>
@@ -108,7 +108,7 @@ export default function CartDrawer() {
                 <li key={item.id} className='flex gap-3 py-4'>
                   {/* Product Image */}
                   <Link
-                    href={`/product/${item.slug}`}
+                    href={`/products/${item.slug}`}
                     onClick={closeDrawer}
                     className='relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-100'
                   >
@@ -126,7 +126,7 @@ export default function CartDrawer() {
                     {/* Name + Remove */}
                     <div className='flex items-start justify-between gap-2'>
                       <Link
-                        href={`/product/${item.slug}`}
+                        href={`/products/${item.slug}`}
                         onClick={closeDrawer}
                         className='line-clamp-2 text-xs font-medium leading-snug text-gray-800 transition-colors hover:text-primary'
                       >
@@ -142,13 +142,13 @@ export default function CartDrawer() {
                     </div>
 
                     {/* Unit price */}
-                    <div className='mt-1 flex items-baseline gap-2'>
-                      <span className='text-base font-bold text-primary'>
+                    <div className='mt-1 flex items-baseline gap-1.5 sm:gap-2'>
+                      <span className='text-xs font-bold text-primary sm:text-sm md:text-base'>
                         ৳{(item.discountPrice ?? item.price).toLocaleString()}
                       </span>
                       {item.basePrice &&
                         item.basePrice > (item.discountPrice ?? item.price) && (
-                          <span className='text-xs text-gray-400 line-through'>
+                          <span className='text-[10px] text-gray-400 line-through sm:text-xs'>
                             ৳{item.basePrice.toLocaleString()}
                           </span>
                         )}
@@ -157,7 +157,7 @@ export default function CartDrawer() {
                     {/* Quantity + Line total */}
                     <div className='mt-2 flex items-center justify-between gap-2'>
                       {/* Quantity Controls */}
-                      <div className='flex items-center gap-0.5 rounded-md border border-gray-200 p-0.5'>
+                      <div className='flex items-center gap-0.5 rounded-md border border-gray-300 p-0.5'>
                         <button
                           onClick={() => {
                             updateQuantity(item.id, item.quantity - 1);
@@ -225,7 +225,7 @@ export default function CartDrawer() {
                       </div>
 
                       {/* Line total */}
-                      <span className='text-base font-semibold text-gray-900'>
+                      <span className='text-xs font-semibold text-gray-900 sm:text-sm md:text-base'>
                         ৳
                         {(
                           (item.discountPrice ?? item.price) * item.quantity
@@ -241,7 +241,7 @@ export default function CartDrawer() {
 
         {/* ── Footer: Summary + Buttons ── */}
         {items.length > 0 && (
-          <div className=' border-t border-gray-200 px-5 py-4'>
+          <div className=' border-t border-gray-300 px-5 py-4'>
             <div className='space-y-2 text-sm'>
               {/* <div className='flex items-center justify-between'>
                 <span className='text-gray-500'>Subtotal</span>
@@ -255,7 +255,7 @@ export default function CartDrawer() {
                   Calculated at checkout
                 </span>
               </div> */}
-              <div className='flex items-center justify-between text-base md:text-lg'>
+              <div className='flex items-center justify-between text-sm sm:text-base md:text-lg'>
                 <span className='font-semibold text-gray-900'>Subtotal</span>
                 <span className='font-bold text-primary'>
                   ৳{subtotal.toLocaleString()}
@@ -264,18 +264,18 @@ export default function CartDrawer() {
             </div>
 
             {/* Action Buttons */}
-            <div className='mt-4 flex flex-col gap-2 lg:flex-row lg:items-center'>
+            <div className='mt-3 flex gap-2 flex-row lg:items-center'>
               <Link
                 href='/checkout'
                 onClick={closeDrawer}
-                className='flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark lg:flex-1'
+                className='flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-dark lg:flex-1 text-xs md:text-base'
               >
                 Checkout
               </Link>
               <Link
                 href='/cart'
                 onClick={closeDrawer}
-                className='flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-primary hover:text-primary lg:flex-1'
+                className='flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-primary hover:text-primary lg:flex-1 text-xs md:text-base'
               >
                 View Cart
               </Link>

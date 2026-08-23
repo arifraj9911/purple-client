@@ -16,7 +16,7 @@ export default function BlogCard({ post, priority = false }: BlogCardProps) {
         href={`/blog/${post.slug}`}
         className='relative block p-[4px]'
       >
-        <div className='relative w-auto h-[140px] sm:h-[240px] overflow-hidden rounded-t-lg bg-gray-50 flex items-center justify-center'>
+        <div className='relative w-auto h-[140px] sm:h-[260px] overflow-hidden rounded-t-lg bg-gray-50 flex items-center justify-center'>
           <Image
             src={post.image}
             alt={post.title}

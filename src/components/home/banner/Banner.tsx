@@ -87,8 +87,7 @@ export default function Banner() {
                     src={slide.image}
                     alt={slide.title}
                     fill
-                    sizes='100vw'
-                    quality={100}
+                    sizes='(max-width: 1024px) 100vw, 1200px'
                     priority={slide.id === 1}
                     className='object-contain object-center'
                   />
@@ -127,8 +126,7 @@ export default function Banner() {
                         src={slide.image}
                         alt={slide.title}
                         fill
-                        sizes='(max-width: 1024px) 50vw, 512px'
-                        quality={95}
+                        sizes='(max-width: 1024px) 50vw, 400px'
                         priority={slide.id === 1}
                         className='object-contain drop-shadow-2xl'
                       />

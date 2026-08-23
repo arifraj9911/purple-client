@@ -37,13 +37,12 @@ export default function WhoWeAre() {
             </div>
           </div>
 
-          <div className='relative aspect-4/3 overflow-hidden rounded-2xl'>
+          <div className='relative h-64 w-full overflow-hidden rounded-2xl sm:h-80 lg:h-[25rem]'>
             <Image
               src={story.image}
               alt='Purple BD workshop'
               fill
               sizes='(max-width: 1024px) 100vw, 50vw'
-              className='object-cover'
             />
           </div>
         </div>

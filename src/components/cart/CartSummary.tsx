@@ -13,7 +13,7 @@ export default function CartSummary() {
 
   return (
     <aside className='w-full shrink-0 lg:w-80 lg:sticky lg:top-32 lg:self-start'>
-      <div className='rounded-xl border border-gray-200 bg-white p-5'>
+      <div className='rounded-xl border border-gray-300 bg-white p-5'>
         <h2 className='font-heading text-lg font-semibold text-gray-900'>
           Cart Summary
         </h2>
@@ -27,7 +27,7 @@ export default function CartSummary() {
               value={coupon}
               onChange={(e) => setCoupon(e.target.value)}
               placeholder='Coupon code'
-              className='w-full rounded-lg border border-gray-200 py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary'
+              className='w-full rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary'
             />
           </div>
           <button
@@ -56,7 +56,7 @@ export default function CartSummary() {
               Calculated at checkout
             </span>
           </div>
-          <div className='flex items-center justify-between border-t border-gray-200 pt-3 text-base'>
+          <div className='flex items-center justify-between border-t border-gray-300 pt-3 text-base'>
             <span className='font-semibold text-gray-900'>Total</span>
             <span className='font-bold text-primary'>
               ৳{subtotal.toLocaleString()}
@@ -73,7 +73,7 @@ export default function CartSummary() {
         </Link>
         <Link
           href='/shop'
-          className='mt-2 flex w-full items-center justify-center rounded-lg border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:border-primary hover:text-primary'
+          className='mt-2 flex w-full items-center justify-center rounded-lg border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition-colors hover:border-primary hover:text-primary'
         >
           Continue Shopping
         </Link>
@@ -85,7 +85,7 @@ export default function CartSummary() {
             {PAYMENT_METHODS.map((method) => (
               <span
                 key={method}
-                className='rounded-md border border-gray-200 bg-gray-50 px-2 py-1 text-xs font-semibold text-gray-600'
+                className='rounded-md border border-gray-300 bg-gray-50 px-2 py-1 text-xs font-semibold text-gray-600'
               >
                 {method}
               </span>

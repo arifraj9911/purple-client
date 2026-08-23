@@ -34,7 +34,7 @@ export default function CartPage() {
             <div className='flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-6'>
               {/* ── LEFT: Items ── */}
               <div className='min-w-0 flex-1'>
-                <div className='overflow-hidden rounded-xl border border-gray-200 bg-white'>
+                <div className='overflow-hidden rounded-xl border border-gray-300 bg-white'>
                   {/* Column headers (desktop) */}
                   <div className='hidden grid-cols-12 gap-3 border-b border-gray-100 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-gray-400 sm:grid'>
                     <span className='col-span-6'>Product</span>

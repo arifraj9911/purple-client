@@ -42,7 +42,7 @@ export default function CartItemRow({ item }: CartItemRowProps) {
       {/* ── Product (full width on mobile, 6 cols on desktop) ── */}
       <div className='col-span-12 flex items-center gap-3 sm:col-span-6'>
         <Link
-          href={`/product/${item.slug}`}
+          href={`/products/${item.slug}`}
           className='relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-100'
         >
           <Image
@@ -55,7 +55,7 @@ export default function CartItemRow({ item }: CartItemRowProps) {
         </Link>
         <div className='min-w-0 flex-1'>
           <Link
-            href={`/product/${item.slug}`}
+            href={`/products/${item.slug}`}
             className='line-clamp-2 text-sm font-medium leading-snug text-gray-800 transition-colors hover:text-primary'
           >
             {item.name}
@@ -87,7 +87,7 @@ export default function CartItemRow({ item }: CartItemRowProps) {
 
       {/* ── Quantity ── */}
       <div className='col-span-4 sm:col-span-2 sm:flex sm:justify-center'>
-        <div className='inline-flex items-center rounded-lg border border-gray-200'>
+        <div className='inline-flex items-center rounded-lg border border-gray-300'>
           <button
             onClick={() => changeQuantity(-1)}
             className='flex h-9 w-9 items-center justify-center text-gray-400 transition-colors hover:bg-gray-100 hover:text-primary'
