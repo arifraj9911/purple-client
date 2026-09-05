@@ -2,25 +2,36 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import { FiCheck } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
+import { FiCheck, FiLoader, FiAlertCircle } from 'react-icons/fi';
 import OtpInput from './OtpInput';
-import { OTP_LENGTH, sendOtp, verifyOtp } from '@/lib/auth';
+import { OTP_LENGTH } from '@/lib/auth';
+import { useVerifyOtpMutation, useResendOtpMutation } from '@/hooks/useAuthMutations';
+import { extractErrorMessage } from '@/lib/toast';
+import type { OtpPurpose } from '@/types/auth.types';
 
-const RESEND_COOLDOWN_SECONDS = 60;
+const RESEND_COOLDOWN_SECONDS = 300; // 5 minutes cooldown
 
 interface OtpFormProps {
   email: string;
+  purpose?: OtpPurpose;
 }
 
-export default function OtpForm({ email }: OtpFormProps) {
+export default function OtpForm({
+  email,
+  purpose = 'EMAIL_VERIFICATION',
+}: OtpFormProps) {
+  const router = useRouter();
+
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
-  const [verifying, setVerifying] = useState(false);
   const [verified, setVerified] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_COOLDOWN_SECONDS);
-  const [resending, setResending] = useState(false);
 
-  // Countdown before the resend button becomes available again.
+  const verifyOtpMutation = useVerifyOtpMutation();
+  const resendOtpMutation = useResendOtpMutation();
+
+  // Countdown timer for resend button availability
   useEffect(() => {
     if (secondsLeft <= 0) return;
     const timer = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
@@ -29,44 +40,74 @@ export default function OtpForm({ email }: OtpFormProps) {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (otp.length !== OTP_LENGTH) return;
-
-    setError('');
-    setVerifying(true);
-    const ok = await verifyOtp(email, otp);
-    setVerifying(false);
-
-    if (!ok) {
-      setError('Invalid code. Please try again.');
-      setOtp('');
+    if (otp.length !== OTP_LENGTH) {
+      setError(`Please enter the complete ${OTP_LENGTH}-digit code.`);
       return;
     }
-    setVerified(true);
+
+    setError('');
+
+    try {
+      await verifyOtpMutation.mutateAsync({
+        email: email.trim(),
+        code: otp.trim(),
+        purpose,
+      });
+
+      if (purpose === 'PASSWORD_RESET') {
+        // Proceed to Reset Password page with verified code
+        router.push(
+          `/reset-password?email=${encodeURIComponent(email.trim())}&otp=${encodeURIComponent(otp.trim())}`
+        );
+      } else {
+        setVerified(true);
+      }
+    } catch (err: any) {
+      const errMsg = extractErrorMessage(err, 'Invalid or expired verification code.');
+      setError(errMsg);
+      setOtp('');
+    }
   };
 
   const handleResend = async () => {
-    setResending(true);
-    await sendOtp(email);
-    setResending(false);
-    setSecondsLeft(RESEND_COOLDOWN_SECONDS);
+    if (secondsLeft > 0 || resendOtpMutation.isPending) return;
+
+    setError('');
+    try {
+      await resendOtpMutation.mutateAsync({
+        email: email.trim(),
+        purpose,
+      });
+      setSecondsLeft(RESEND_COOLDOWN_SECONDS);
+    } catch (err: any) {
+      const errMsg = extractErrorMessage(err, 'Could not resend code. Please try again later.');
+      setError(errMsg);
+    }
   };
 
-  /* ── Verified success state ── */
+  const isVerifying = verifyOtpMutation.isPending;
+  const isResending = resendOtpMutation.isPending;
+
+  const minutes = Math.floor(secondsLeft / 60);
+  const seconds = secondsLeft % 60;
+  const formattedTime = `${minutes}:${String(seconds).padStart(2, '0')}`;
+
+  /* ── Verified success state (For Email Verification) ── */
   if (verified) {
     return (
       <div className='flex flex-col items-center py-4 text-center'>
-        <div className='mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-accent/10'>
-          <FiCheck className='h-7 w-7 text-accent' />
+        <div className='mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100'>
+          <FiCheck className='h-7 w-7 text-green-600' />
         </div>
         <h2 className='font-heading text-lg font-semibold text-gray-900'>
-          Email Verified
+          Email Verified Successfully
         </h2>
-        <p className='mt-1 max-w-xs text-sm text-gray-500'>
-          Your account has been created. You can now log in.
+        <p className='mt-2 max-w-xs text-sm text-gray-500'>
+          Your account has been activated. You can now log in to your account.
         </p>
         <Link
           href='/login'
-          className='mt-5 inline-flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark'
+          className='mt-6 inline-flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark shadow-sm'
         >
           Continue to Login
         </Link>
@@ -76,31 +117,40 @@ export default function OtpForm({ email }: OtpFormProps) {
 
   return (
     <form onSubmit={handleSubmit} noValidate className='space-y-6'>
-      <p className='text-center text-sm text-gray-600'>
-        We&apos;ve sent a {OTP_LENGTH}-digit verification code to{' '}
-        <span className='font-semibold text-gray-900'>
+      <div className='text-center'>
+        <p className='text-sm text-gray-600'>
+          We have sent a {OTP_LENGTH}-digit verification code to
+        </p>
+        <p className='mt-1 font-semibold text-gray-900 break-all'>
           {email || 'your email'}
-        </span>
-      </p>
+        </p>
+      </div>
 
       <OtpInput
         length={OTP_LENGTH}
         value={otp}
-        onChange={setOtp}
-        disabled={verifying}
+        onChange={(val) => {
+          setOtp(val);
+          if (error) setError('');
+        }}
+        disabled={isVerifying}
         hasError={!!error}
       />
 
       {error && (
-        <p className='text-center text-sm font-medium text-red-500'>{error}</p>
+        <div className='rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700 flex items-center justify-center gap-2'>
+          <FiAlertCircle className='h-4 w-4 shrink-0 text-red-500' />
+          <span>{error}</span>
+        </div>
       )}
 
       <button
         type='submit'
-        disabled={otp.length !== OTP_LENGTH || verifying}
-        className='flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70'
+        disabled={otp.length !== OTP_LENGTH || isVerifying}
+        className='flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70 shadow-sm'
       >
-        {verifying ? 'Verifying…' : 'Verify'}
+        {isVerifying && <FiLoader className='h-4 w-4 animate-spin' />}
+        {isVerifying ? 'Verifying…' : 'Verify Code'}
       </button>
 
       <div className='text-center text-sm text-gray-600'>
@@ -108,27 +158,28 @@ export default function OtpForm({ email }: OtpFormProps) {
           <p>
             Resend code in{' '}
             <span className='font-semibold text-gray-900'>
-              0:{String(secondsLeft).padStart(2, '0')}
+              {formattedTime}
             </span>
           </p>
         ) : (
           <button
             type='button'
             onClick={handleResend}
-            disabled={resending}
-            className='font-semibold text-primary transition-colors hover:text-primary-dark disabled:opacity-60'
+            disabled={isResending}
+            className='inline-flex items-center gap-1.5 font-semibold text-primary transition-colors hover:text-primary-dark disabled:opacity-60'
           >
-            {resending ? 'Sending…' : 'Resend code'}
+            {isResending && <FiLoader className='h-3.5 w-3.5 animate-spin' />}
+            {isResending ? 'Sending new code…' : 'Resend code'}
           </button>
         )}
       </div>
 
       <p className='text-center text-sm text-gray-500'>
         <Link
-          href='/register'
-          className='font-medium text-primary hover:text-primary-dark'
+          href={purpose === 'PASSWORD_RESET' ? '/forgot-password' : '/register'}
+          className='font-medium text-primary hover:text-primary-dark transition-colors'
         >
-          Change email
+          {purpose === 'PASSWORD_RESET' ? 'Change email for reset' : 'Change email'}
         </Link>
       </p>
     </form>

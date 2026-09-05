@@ -1,18 +1,22 @@
+'use client';
+
 interface GoogleSignInButtonProps {
   label?: string;
 }
 
-/**
- * Google sign-in button (design only).
- * The actual OAuth flow will be wired to the backend later.
- */
 export default function GoogleSignInButton({
   label = 'Continue with Google',
 }: GoogleSignInButtonProps) {
+  const handleGoogleLogin = () => {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+    window.location.href = `${backendUrl}/auth/google`;
+  };
+
   return (
     <button
       type='button'
-      className='flex w-full items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50'
+      onClick={handleGoogleLogin}
+      className='flex w-full items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 shadow-sm'
     >
       <GoogleIcon />
       {label}

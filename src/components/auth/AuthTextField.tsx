@@ -12,9 +12,11 @@ interface AuthTextFieldProps {
   placeholder?: string;
   error?: string;
   autoComplete?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
-/** Reusable labeled input with error display and a password visibility toggle. */
+/** Reusable labeled input with error display, password visibility toggle, and disabled/dimmed support. */
 export default function AuthTextField({
   id,
   label,
@@ -24,15 +26,21 @@ export default function AuthTextField({
   placeholder,
   error,
   autoComplete,
+  disabled = false,
+  readOnly = false,
 }: AuthTextFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
   const inputType = isPassword && showPassword ? 'text' : type;
 
+  const isDimmed = disabled || readOnly;
+
   const fieldClass = [
-    'w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-gray-900 outline-none transition-colors',
-    'placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary',
-    error ? 'border-red-400' : 'border-gray-200',
+    'w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition-colors',
+    isDimmed
+      ? 'bg-gray-100/90 text-gray-500 border-gray-200 cursor-not-allowed select-none'
+      : 'bg-white text-gray-900 placeholder:text-gray-400 focus:border-primary focus:ring-1 focus:ring-primary',
+    error && !isDimmed ? 'border-red-400' : isDimmed ? 'border-gray-200' : 'border-gray-200',
     isPassword ? 'pr-10' : '',
   ].join(' ');
 
@@ -40,7 +48,9 @@ export default function AuthTextField({
     <div>
       <label
         htmlFor={id}
-        className='mb-1.5 block text-sm font-medium text-gray-700'
+        className={`mb-1.5 block text-sm font-medium ${
+          isDimmed ? 'text-gray-500' : 'text-gray-700'
+        }`}
       >
         {label}
       </label>
@@ -50,12 +60,16 @@ export default function AuthTextField({
           id={id}
           type={inputType}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => {
+            if (!isDimmed) onChange(e.target.value);
+          }}
           placeholder={placeholder}
           autoComplete={autoComplete}
+          disabled={disabled}
+          readOnly={readOnly}
           className={fieldClass}
         />
-        {isPassword && (
+        {isPassword && !isDimmed && (
           <button
             type='button'
             onClick={() => setShowPassword((prev) => !prev)}
@@ -71,7 +85,7 @@ export default function AuthTextField({
         )}
       </div>
 
-      {error && <p className='mt-1 text-xs text-red-500'>{error}</p>}
+      {error && !isDimmed && <p className='mt-1 text-xs text-red-500'>{error}</p>}
     </div>
   );
 }

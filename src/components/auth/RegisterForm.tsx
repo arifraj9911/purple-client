@@ -3,86 +3,106 @@
 import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FiLoader } from 'react-icons/fi';
+import { FiLoader, FiAlertCircle } from 'react-icons/fi';
 import AuthTextField from './AuthTextField';
 import GoogleSignInButton from './GoogleSignInButton';
-import { isValidEmail, sendOtp } from '@/lib/auth';
+import { isValidEmail } from '@/lib/auth';
+import { useRegisterMutation } from '@/hooks/useAuthMutations';
+import { extractErrorMessage } from '@/lib/toast';
 
 interface RegisterErrors {
-  name?: string;
+  fullName?: string;
   email?: string;
   password?: string;
   confirmPassword?: string;
+  terms?: string;
 }
 
-/** Registration data kept in session storage until OTP is verified. */
-interface PendingRegistration {
-  name: string;
-  email: string;
-  password: string;
-}
+const PASSWORD_PATTERN = /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
 
 export default function RegisterForm() {
   const router = useRouter();
 
-  const [name, setName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [agreeTerms, setAgreeTerms] = useState(false);
   const [errors, setErrors] = useState<RegisterErrors>({});
-  const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState('');
+
+  const registerMutation = useRegisterMutation();
 
   const validate = (): boolean => {
     const next: RegisterErrors = {};
-    if (!name.trim()) next.name = 'Full name is required';
-    if (!email.trim()) next.email = 'Email is required';
-    else if (!isValidEmail(email)) next.email = 'Enter a valid email address';
-    if (!password) next.password = 'Password is required';
-    else if (password.length < 6)
-      next.password = 'Password must be at least 6 characters';
-    if (!confirmPassword) next.confirmPassword = 'Please confirm your password';
-    else if (confirmPassword !== password)
+
+    if (!fullName.trim()) {
+      next.fullName = 'Full name is required';
+    }
+
+    if (!email.trim()) {
+      next.email = 'Email is required';
+    } else if (!isValidEmail(email)) {
+      next.email = 'Please enter a valid email address';
+    }
+
+    if (!password) {
+      next.password = 'Password is required';
+    } else if (password.length < 8) {
+      next.password = 'Password must be at least 8 characters long';
+    } else if (!PASSWORD_PATTERN.test(password)) {
+      next.password = 'Must contain at least 1 uppercase, 1 lowercase, and 1 number or symbol';
+    }
+
+    if (!confirmPassword) {
+      next.confirmPassword = 'Please confirm your password';
+    } else if (confirmPassword !== password) {
       next.confirmPassword = 'Passwords do not match';
+    }
+
+    if (!agreeTerms) {
+      next.terms = 'You must agree to the Terms & Conditions';
+    }
+
     setErrors(next);
     return Object.keys(next).length === 0;
   };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    setFormError('');
+
     if (!validate()) return;
 
-    setLoading(true);
-    const sent = await sendOtp(email);
-    setLoading(false);
+    try {
+      await registerMutation.mutateAsync({
+        fullName: fullName.trim(),
+        email: email.trim().toLowerCase(),
+        password,
+      });
 
-    if (!sent) {
-      setErrors((prev) => ({
-        ...prev,
-        email: 'Could not send a code to this email.',
-      }));
-      return;
+      // Save email for verification and redirect to verify-otp page
+      router.push(`/verify-otp?email=${encodeURIComponent(email.trim())}&purpose=EMAIL_VERIFICATION`);
+    } catch (err: any) {
+      const errMsg = extractErrorMessage(err, 'Failed to create account.');
+      setFormError(errMsg);
     }
-
-    // Keep the registration data so signup can complete after OTP verification.
-    const pending: PendingRegistration = {
-      name: name.trim(),
-      email: email.trim(),
-      password,
-    };
-    sessionStorage.setItem('pendingRegistration', JSON.stringify(pending));
-
-    router.push(`/verify-otp?email=${encodeURIComponent(email.trim())}`);
   };
+
+  const isSubmitting = registerMutation.isPending;
 
   return (
     <form onSubmit={handleSubmit} noValidate className='space-y-4'>
       <AuthTextField
         id='register-name'
         label='Full Name'
-        value={name}
-        onChange={setName}
-        placeholder='Your full name'
-        error={errors.name}
+        value={fullName}
+        onChange={(val) => {
+          setFullName(val);
+          if (errors.fullName) setErrors((prev) => ({ ...prev, fullName: undefined }));
+        }}
+        placeholder='e.g. Arif Raj'
+        error={errors.fullName}
         autoComplete='name'
       />
 
@@ -91,7 +111,10 @@ export default function RegisterForm() {
         label='Email'
         type='email'
         value={email}
-        onChange={setEmail}
+        onChange={(val) => {
+          setEmail(val);
+          if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+        }}
         placeholder='you@example.com'
         error={errors.email}
         autoComplete='email'
@@ -102,8 +125,11 @@ export default function RegisterForm() {
         label='Password'
         type='password'
         value={password}
-        onChange={setPassword}
-        placeholder='At least 6 characters'
+        onChange={(val) => {
+          setPassword(val);
+          if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
+        }}
+        placeholder='Min 8 chars, 1 upper, 1 lower, 1 number'
         error={errors.password}
         autoComplete='new-password'
       />
@@ -113,30 +139,53 @@ export default function RegisterForm() {
         label='Confirm Password'
         type='password'
         value={confirmPassword}
-        onChange={setConfirmPassword}
+        onChange={(val) => {
+          setConfirmPassword(val);
+          if (errors.confirmPassword) setErrors((prev) => ({ ...prev, confirmPassword: undefined }));
+        }}
         placeholder='Re-enter your password'
         error={errors.confirmPassword}
         autoComplete='new-password'
       />
 
-      <label className='flex items-start gap-2 text-sm text-gray-600'>
-        <input
-          type='checkbox'
-          className='mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary'
-        />
-        <span>I agree to the Terms &amp; Conditions</span>
-      </label>
+      <div className='space-y-1'>
+        <label className='flex cursor-pointer items-start gap-2 text-sm text-gray-600'>
+          <input
+            type='checkbox'
+            checked={agreeTerms}
+            onChange={(e) => {
+              setAgreeTerms(e.target.checked);
+              if (errors.terms) setErrors((prev) => ({ ...prev, terms: undefined }));
+            }}
+            className='mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary'
+          />
+          <span>
+            I agree to the{' '}
+            <Link href='/terms' className='text-primary hover:underline'>
+              Terms &amp; Conditions
+            </Link>
+          </span>
+        </label>
+        {errors.terms && <p className='text-xs text-red-500 pl-6'>{errors.terms}</p>}
+      </div>
+
+      {formError && (
+        <div className='rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-red-700 flex items-center gap-2'>
+          <FiAlertCircle className='h-4 w-4 shrink-0 text-red-500' />
+          <span>{formError}</span>
+        </div>
+      )}
 
       <button
         type='submit'
-        disabled={loading}
-        className='flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70'
+        disabled={isSubmitting || !agreeTerms}
+        className='flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-primary shadow-sm'
       >
-        {loading && <FiLoader className='h-4 w-4 animate-spin' />}
-        {loading ? 'Sending code…' : 'Create Account'}
+        {isSubmitting && <FiLoader className='h-4 w-4 animate-spin' />}
+        {isSubmitting ? 'Creating account…' : 'Create Account'}
       </button>
 
-      <div className='relative'>
+      <div className='relative my-2'>
         <div className='absolute inset-0 flex items-center'>
           <span className='w-full border-t border-gray-200' />
         </div>
@@ -147,11 +196,11 @@ export default function RegisterForm() {
 
       <GoogleSignInButton />
 
-      <p className='text-center text-sm text-gray-600'>
+      <p className='text-center text-sm text-gray-600 pt-2'>
         Already have an account?{' '}
         <Link
           href='/login'
-          className='font-semibold text-primary hover:text-primary-dark'
+          className='font-semibold text-primary hover:text-primary-dark transition-colors'
         >
           Login
         </Link>

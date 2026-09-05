@@ -1,37 +1,16 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-  type ReactNode,
-} from 'react';
-
-/**
- * Global (mock) authentication store.
- *
- * Tracks the currently signed-in user so the header profile dropdown and the
- * user dashboard stay in sync. Swap `login`/`logout` for real API calls later.
- */
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
+import { useAuthStore } from '@/store/auth.store';
+import { useLogoutMutation } from '@/hooks/useAuthMutations';
 
 export interface AuthUser {
-  id: number;
+  id: string | number;
   name: string;
   email: string;
-  phone: string;
+  phone?: string;
+  isVerified?: boolean;
 }
-
-const STORAGE_KEY = 'purple-auth-user';
-
-/** Derive a readable display name from an email (used by the mock login). */
-const nameFromEmail = (email: string): string => {
-  const local = email.split('@')[0] ?? '';
-  const name = local.replace(/[._-]+/g, ' ').trim();
-  if (!name) return 'Customer';
-  return name.replace(/\b\w/g, (c) => c.toUpperCase());
-};
 
 interface AuthContextValue {
   user: AuthUser | null;
@@ -43,48 +22,42 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [hydrated, setHydrated] = useState(false);
+  const { user: storeUser, isAuthenticated, setAuth } = useAuthStore();
+  const logoutMutation = useLogoutMutation();
 
-  /* Restore the signed-in user once, on the client, after hydration. */
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored) setUser(JSON.parse(stored) as AuthUser);
-    } catch {
-      /* ignore storage errors */
-    }
-    setHydrated(true);
-  }, []);
-
-  /* Persist the signed-in user (or clear it on logout). */
-  useEffect(() => {
-    if (!hydrated) return;
-    try {
-      if (user) {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-      } else {
-        window.localStorage.removeItem(STORAGE_KEY);
-      }
-    } catch {
-      /* ignore storage errors */
-    }
-  }, [user, hydrated]);
-
-  const login = useCallback((email: string, name?: string) => {
-    setUser({
-      id: 1,
-      name: name ?? nameFromEmail(email),
-      email,
+  const user: AuthUser | null = useMemo(() => {
+    if (!storeUser) return null;
+    return {
+      id: storeUser.id,
+      name: storeUser.fullName || storeUser.email.split('@')[0],
+      email: storeUser.email,
       phone: '017XXXXXXXX',
-    });
-  }, []);
+      isVerified: storeUser.isVerified,
+    };
+  }, [storeUser]);
 
-  const logout = useCallback(() => setUser(null), []);
+  const login = (email: string, name?: string) => {
+    setAuth({
+      id: 'local-session',
+      email,
+      fullName: name || email.split('@')[0],
+      isVerified: true,
+      provider: 'LOCAL',
+    });
+  };
+
+  const logout = () => {
+    logoutMutation.mutate();
+  };
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoggedIn: user !== null, login, logout }}
+      value={{
+        user,
+        isLoggedIn: isAuthenticated && !!user,
+        login,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

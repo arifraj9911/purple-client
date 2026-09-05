@@ -50,7 +50,7 @@ export interface Address {
 }
 
 export interface UserProfile {
-  id: number;
+  id: string | number;
   name: string;
   email: string;
   phone: string;

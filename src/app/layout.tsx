@@ -9,6 +9,7 @@ import { CompareProvider } from '@/lib/compare-context';
 import { AuthProvider } from '@/lib/auth-context';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { FloatingContact } from '@/components/ui/floating-contact';
+import { AppProviders } from '@/components/providers/AppProviders';
 import './globals.css';
 
 const poppins = Poppins({
@@ -50,20 +51,22 @@ export default function RootLayout({
       className={`${poppins.variable} ${inter.variable} ${hindSiliguri.variable} h-full antialiased`}
     >
       <body className='min-h-full flex flex-col font-body text-gray-700 bg-white'>
-        <CartProvider>
-          <WishlistProvider>
-            <CompareProvider>
-              <AuthProvider>
-                <Header />
-                <main className='flex-1'>{children}</main>
-                <Footer />
-                <CartDrawer />
-                <ScrollToTop />
-                <FloatingContact />
-              </AuthProvider>
-            </CompareProvider>
-          </WishlistProvider>
-        </CartProvider>
+        <AppProviders>
+          <CartProvider>
+            <WishlistProvider>
+              <CompareProvider>
+                <AuthProvider>
+                  <Header />
+                  <main className='flex-1'>{children}</main>
+                  <Footer />
+                  <CartDrawer />
+                  <ScrollToTop />
+                  <FloatingContact />
+                </AuthProvider>
+              </CompareProvider>
+            </WishlistProvider>
+          </CartProvider>
+        </AppProviders>
       </body>
     </html>
   );
